@@ -42,7 +42,7 @@
 ##----------------------------------------------------------------------------##
 
 ## Imports ##
-#Python 
+#Python
 import os;
 import os.path;
 import sys;
@@ -63,37 +63,53 @@ class Globals:
 ## Constants                                                                  ##
 ################################################################################
 class Constants:
-    GAME_FPS = 60;
-    SCREEN_SIZE = (600, 480);
+    GAME_FPS       = 60;
+    SCREEN_SIZE    = (600, 420);
     WINDOW_CAPTION = "Taz - v0.1 - AmazingCow";
 
 ################################################################################
-## Game                                                                       ##
+## Director                                                                   ##
 ################################################################################
-class Game(object):
+class Director(object):
+    ############################################################################
+    ## Singleton                                                              ##
+    ############################################################################
+    __instance = None;
+    @staticmethod
+    def instance():
+        print "Director.get_instance()";
+        if(Director.__instance is None):
+            Director.__instance = Director();
+
+        return Director.__instance;
+
+    ############################################################################
+    ## CTOR                                                                   ##
+    ############################################################################
     def __init__(self):
+        print "Director.__init__";
         self.__surface       = None;
         self.__clock         = None;
         self.__current_scene = None
 
         self.__running = False;
 
-    ## Public Methods ##
+    ############################################################################
+    ## Init/Run/Clean                                                         ##
+    ############################################################################
     def init(self):
         pygame.init();
 
-        #Init the Window. 
+        #Init the Window.
         self.__surface = pygame.display.set_mode(Constants.SCREEN_SIZE);
         pygame.display.set_caption(Constants.WINDOW_CAPTION);
-        
+
         #Init the Game clock.
         self.__clock = pygame.time.Clock();
 
-        self.__current_scene = scene.SplashScene();
-
     def run(self):
         self.__running = True;
-        
+
         while(self.__running):
             dt = self.__clock.tick(Constants.GAME_FPS);
 
@@ -104,35 +120,35 @@ class Game(object):
     def clean(self):
         pygame.quit();
 
-    ## Private Methods ##
+    ############################################################################
+    ## Scene Management                                                       ##
+    ############################################################################
+    def change_scene(self, scene):
+        self.__current_scene = scene;
+
+
+    ############################################################################
+    ## Update/Draw/Handle Events - Private                                    ##
+    ############################################################################
+    def __update(self, dt):
+        self.__current_scene.update(dt);
+
+    def __draw(self):
+        self.__surface.fill((255, 255, 255));
+        self.__current_scene.draw(self.__surface);
+        pygame.display.update()
+
     def __handle_events(self):
         for event in pygame.event.get():
             #If user wants to quit, just quit.
             if(event.type == pygame.locals.QUIT):
                 self.__running = False;
                 return;
+            if(event.type == pygame.locals.KEYDOWN and event.key == pygame.locals.K_ESCAPE):
+                self.__running = False;
+                return;
             #Pass the event to scene handler.
             self.__current_scene.handle_events(event);
 
-    def __update(self, dt):
-        self.__current_scene.update(dt);
 
-    def __draw(self):
-        self.__surface.fill((0,0,0));
-        self.__current_scene.draw(self.__surface);
-        pygame.display.update()
 
-################################################################################
-## Script Initialization                                                      ##
-################################################################################
-def main():
-    game = Game();
-    
-    game.init();
-    game.run();
-    game.clean();
-
-    exit(0);
-
-if __name__ == '__main__':
-    main();
