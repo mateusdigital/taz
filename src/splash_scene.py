@@ -53,7 +53,8 @@ class SplashScene(Scene):
     ############################################################################
     ## Constants                                                              ##
     ############################################################################
-    TIMER_TIME              = 500;
+    #COWTODO: Change to 500 when dev is over....
+    TIMER_TIME              = 20;
     TICKS_TO_LOGO_DISAPPEAR = 4;
 
     ############################################################################
@@ -65,7 +66,7 @@ class SplashScene(Scene):
         #Init the Sprite....
         self.sprite = Sprite();
         self.sprite.load_image(Sprites.AmazingCowLogo);
-        self.sprite.set_position(100, 100);
+        self.sprite.set_position(91, 81);
 
         #Init the Timer..
         self.timer = BasicClock(SplashScene.TIMER_TIME);
