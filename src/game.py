@@ -64,7 +64,7 @@ class Globals:
 ################################################################################
 class Constants:
     GAME_FPS       = 60;
-    SCREEN_SIZE    = (600, 420);
+    SCREEN_SIZE    = (480, 378);
     WINDOW_CAPTION = "Taz - v0.1 - AmazingCow";
 
 ################################################################################
@@ -140,11 +140,12 @@ class Director(object):
 
     def __handle_events(self):
         for event in pygame.event.get():
+            print event;
             #If user wants to quit, just quit.
             if(event.type == pygame.locals.QUIT):
                 self.__running = False;
                 return;
-            if(event.type == pygame.locals.KEYDOWN and event.key == pygame.locals.K_ESCAPE):
+            if(event.type == pygame.locals.KEYDOWN and event.key == pygame.locals.K_END):
                 self.__running = False;
                 return;
             #Pass the event to scene handler.
