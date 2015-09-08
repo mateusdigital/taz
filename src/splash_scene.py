@@ -5,7 +5,7 @@
 ##               ████████                                                     ##
 ##             ██        ██                                                   ##
 ##            ███  █  █  ███                                                  ##
-##            █ █        █ █        scene.py                                  ##
+##            █ █        █ █        splash_scene.py                           ##
 ##             ████████████         Game Taz                                  ##
 ##           █              █       Copyright (c) 2015 AmazingCow             ##
 ##          █     █    █     █      www.AmazingCow.com                        ##
@@ -42,35 +42,55 @@
 ##----------------------------------------------------------------------------##
 
 ## Imports ##
-#Pygame
-import pygame;
-#Project
+from scene      import Scene;
+from scene      import Sprite;
+from clock      import BasicClock;
+from game       import Director;
+from menu_scene import MenuScene;
 
-#bass4 the hacker
-
-################################################################################
-## Scene                                                                      ##
-################################################################################
-class Scene(pygame.sprite.Group):
+class SplashScene(Scene):
+    ############################################################################
+    ## CTOR                                                                   ##
+    ############################################################################
     def __init__(self):
-        pygame.sprite.Group.__init__(self);
+        Scene.__init__(self);
 
-    def handle_events(self, event):
-        pass;
+        #Init the Sprite....
+        self.sprite = Sprite();
+        self.sprite.load_image("../resources/Sprite_AmazingCowLogo.png");
+        self.sprite.set_position(100, 100);
+
+        #Init the Timer..
+        self.timer = BasicClock(50);
+        self.timer.set_callback(self.on_timer_tick);
+        self.timer.start();
+
+        self.timer_ticks_to_sprite_disapear = 4;
+
+    ############################################################################
+    ## Time Callback                                                          ##
+    ############################################################################
+    def on_timer_tick(self):
+        if(self.sprite not in self):
+            self.add(self.sprite);
+        else:
+            self.timer_ticks_to_sprite_disapear -= 1;
+            if(self.timer_ticks_to_sprite_disapear == 0):
+                self.remove(self.sprite);
+                self.timer.stop();
+                self.change_scene();
+
+    ############################################################################
+    ## Update/Draw/Handle Events                                              ##
+    ############################################################################
     def update(self, dt):
-        pass;
+        self.timer.update(dt);
 
-################################################################################
-## Sprite                                                                    ##
-################################################################################
-class Sprite(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self);
-        self.rect = pygame.rect.Rect(0,0,0,0);
+    def draw(self, surface):
+        Scene.draw(self,surface);
 
-    def load_image(self, filename):
-        self.image = pygame.image.load(filename);
-
-    def set_position(self, x, y):
-        self.rect[0] = x;
-        self.rect[1] = y;
+    ############################################################################
+    ## Other Methods                                                          ##
+    ############################################################################
+    def change_scene(self):
+        Director.instance().change_scene(MenuScene());

@@ -5,7 +5,7 @@
 ##               ████████                                                     ##
 ##             ██        ██                                                   ##
 ##            ███  █  █  ███                                                  ##
-##            █ █        █ █        scene.py                                  ##
+##            █ █        █ █        splash_scene.py                           ##
 ##             ████████████         Game Taz                                  ##
 ##           █              █       Copyright (c) 2015 AmazingCow             ##
 ##          █     █    █     █      www.AmazingCow.com                        ##
@@ -40,37 +40,76 @@
 ##                                                                            ##
 ##                                  Enjoy :)                                  ##
 ##----------------------------------------------------------------------------##
-
 ## Imports ##
 #Pygame
 import pygame;
 #Project
+from game  import Director;
+from scene import Scene;
+from scene import Sprite;
+from clock import BasicClock;
 
-#bass4 the hacker
-
-################################################################################
-## Scene                                                                      ##
-################################################################################
-class Scene(pygame.sprite.Group):
+class MenuScene(Scene):
+    ############################################################################
+    ## CTOR                                                                   ##
+    ############################################################################
     def __init__(self):
-        pygame.sprite.Group.__init__(self);
+        Scene.__init__(self);
+
+        #Init the Sprites....
+        #Taz.
+        self.taz_logo = Sprite();
+        self.taz_logo.load_image("../resources/Sprite_TazLogo.png");
+        self.taz_logo.set_position(216, 39);
+        self.add(self.taz_logo);
+
+        #Amazing Cow Url.
+        self.cow_url = Sprite();
+        self.cow_url.load_image("../resources/Sprite_AmazingCowURL.png");
+        self.cow_url.set_position(225, 397);
+        self.add(self.cow_url);
+
+        #Menu Options.
+        self.menu_options  = [];
+        self.current_index = 0;
+        #Play.
+        self.play_option = Sprite();
+        self.play_option.load_image("../resources/Sprite_Play.png");
+        self.play_option.set_position(217, 333);
+        #Credits.
+        self.credits_option = Sprite();
+        self.credits_option.load_image("../resources/Sprite_Credits.png");
+        self.credits_option.set_position(217, 333);
+
+        self.menu_options.append(self.play_option);
+        self.menu_options.append(self.credits_option);
+
+        self.change_menu_option();
+
+
+    ############################################################################
+    ## Update/Draw/Handle Events                                              ##
+    ############################################################################
+    def draw(self, surface):
+        Scene.draw(self,surface);
 
     def handle_events(self, event):
-        pass;
-    def update(self, dt):
-        pass;
+        if(event.type != pygame.locals.KEYDOWN):
+            return;
 
-################################################################################
-## Sprite                                                                    ##
-################################################################################
-class Sprite(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self);
-        self.rect = pygame.rect.Rect(0,0,0,0);
+        if(event.key == pygame.locals.K_UP or event.key == pygame.locals.K_DOWN):
+            self.change_menu_option();
+        elif(event.key == pygame.locals.K_RETURN):
+            self.change_scene();
 
-    def load_image(self, filename):
-        self.image = pygame.image.load(filename);
 
-    def set_position(self, x, y):
-        self.rect[0] = x;
-        self.rect[1] = y;
+    ############################################################################
+    ## Other Methods                                                          ##
+    ############################################################################
+    def change_menu_option(self):
+        self.remove(self.menu_options[self.current_index]);
+        self.current_index = (self.current_index + 1) % 2;
+        self.add(self.menu_options[self.current_index]);
+
+    def change_scene(self):
+        print "Change_scee", self.current_index;
