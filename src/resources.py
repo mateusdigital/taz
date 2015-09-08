@@ -6,3 +6,7 @@ class Sprites:
     AmazingCowUrl = "../resources/Sprite_AmazingCowURL.png";
     MenuPlay      = "../resources/Sprite_Play.png";
     MenuCredits   = "../resources/Sprite_Credits.png";
+    #GameScnee...
+    AmazingCowGameLogo = "../resources/Sprite_AmazingCowGameLogo.png";
+    Food               = "../resources/Sprite_Food.png";
+    GameField          = "../resources/Sprite_GameField.png";
