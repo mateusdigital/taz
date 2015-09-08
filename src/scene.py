@@ -74,3 +74,9 @@ class Sprite(pygame.sprite.Sprite):
     def set_position(self, x, y):
         self.rect[0] = x;
         self.rect[1] = y;
+    def get_position(self):
+        return self.rect[0], self.rect[1];
+
+    def move(self, x, y):
+        self.rect[0] += x;
+        self.rect[1] += y;
