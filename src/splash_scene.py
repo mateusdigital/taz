@@ -47,8 +47,15 @@ from scene      import Sprite;
 from clock      import BasicClock;
 from game       import Director;
 from menu_scene import MenuScene;
+from resources  import Sprites;
 
 class SplashScene(Scene):
+    ############################################################################
+    ## Constants                                                              ##
+    ############################################################################
+    TIMER_TIME              = 500;
+    TICKS_TO_LOGO_DISAPPEAR = 4;
+
     ############################################################################
     ## CTOR                                                                   ##
     ############################################################################
@@ -57,15 +64,15 @@ class SplashScene(Scene):
 
         #Init the Sprite....
         self.sprite = Sprite();
-        self.sprite.load_image("../resources/Sprite_AmazingCowLogo.png");
+        self.sprite.load_image(Sprites.AmazingCowLogo);
         self.sprite.set_position(100, 100);
 
         #Init the Timer..
-        self.timer = BasicClock(50);
+        self.timer = BasicClock(SplashScene.TIMER_TIME);
         self.timer.set_callback(self.on_timer_tick);
         self.timer.start();
 
-        self.timer_ticks_to_sprite_disapear = 4;
+        self.timer_ticks_to_sprite_disapear = SplashScene.TICKS_TO_LOGO_DISAPPEAR;
 
     ############################################################################
     ## Time Callback                                                          ##
