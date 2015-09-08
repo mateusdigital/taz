@@ -44,11 +44,12 @@
 #Pygame
 import pygame;
 #Project
-from game      import Director;
-from scene     import Scene;
-from scene     import Sprite;
-from clock     import BasicClock;
-from resources import Sprites;
+from game       import Director;
+from scene      import Scene;
+from scene      import Sprite;
+from clock      import BasicClock;
+from game_scene import GameScene;
+from resources  import Sprites;
 
 class MenuScene(Scene):
     ############################################################################
@@ -61,26 +62,26 @@ class MenuScene(Scene):
         #Taz.
         self.taz_logo = Sprite();
         self.taz_logo.load_image(Sprites.TazLogo);
-        self.taz_logo.set_position(216, 39);
+        self.taz_logo.set_position(156, 31);
         self.add(self.taz_logo);
 
         #Amazing Cow Url.
         self.cow_url = Sprite();
         self.cow_url.load_image(Sprites.AmazingCowUrl);
-        self.cow_url.set_position(225, 397);
+        self.cow_url.set_position(166, 359);
         self.add(self.cow_url);
 
         #Menu Options.
         self.menu_options  = [];
-        self.current_index = 0;
+        self.current_index = 1;
         #Play.
         self.play_option = Sprite();
         self.play_option.load_image(Sprites.MenuPlay);
-        self.play_option.set_position(217, 333);
+        self.play_option.set_position(194, 302);
         #Credits.
         self.credits_option = Sprite();
         self.credits_option.load_image(Sprites.MenuCredits);
-        self.credits_option.set_position(217, 333);
+        self.credits_option.set_position(159, 302);
 
         self.menu_options.append(self.play_option);
         self.menu_options.append(self.credits_option);
@@ -117,4 +118,8 @@ class MenuScene(Scene):
         self.add(self.menu_options[self.current_index]);
 
     def change_scene(self):
-        print "Change_scee", self.current_index;
+        scene = None;
+        if(self.current_index == 0):
+            scene = GameScene();
+
+        Director.instance().change_scene(scene);
