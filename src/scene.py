@@ -69,14 +69,29 @@ class Sprite(pygame.sprite.Sprite):
         self.rect = pygame.rect.Rect(0,0,0,0);
 
     def load_image(self, filename):
+        print filename;
         self.image = pygame.image.load(filename);
 
     def set_position(self, x, y):
         self.rect[0] = x;
         self.rect[1] = y;
+    def set_position_x(self, x):
+        self.rect[0] = x;
+    def set_position_y(self, y):
+        self.rect[1] = y;
+
     def get_position(self):
         return self.rect[0], self.rect[1];
+    def get_position_x(self):
+        return self.rect[0];
+    def get_position_y(self):
+        return self.rect[1];
+
 
     def move(self, x, y):
         self.rect[0] += x;
+        self.rect[1] += y;
+    def move_x(self, x):
+        self.rect[0] += x;
+    def move_y(self, y):
         self.rect[1] += y;
