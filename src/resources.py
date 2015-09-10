@@ -8,5 +8,6 @@ class Sprites:
     MenuCredits   = "../resources/Sprite_Credits.png";
     #GameScnee...
     AmazingCowGameLogo = "../resources/Sprite_AmazingCowGameLogo.png";
-    Food               = "../resources/Sprite_Food.png";
     GameField          = "../resources/Sprite_GameField.png";
+    Food               = "../resources/Sprite_Food.png";
+    Taz                = "../resources/Sprite_Taz.png";
