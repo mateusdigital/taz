@@ -45,6 +45,8 @@
 #Project
 from game         import Director;
 from splash_scene import SplashScene;
+from game_scene   import GameScene;
+
 
 ################################################################################
 ## Script Initialization                                                      ##
@@ -54,7 +56,8 @@ def main():
 
     director.init();
 
-    director.change_scene(SplashScene());
+    # director.change_scene(SplashScene());
+    director.change_scene(GameScene());
 
     director.run();
     director.clean();
