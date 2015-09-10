@@ -140,7 +140,7 @@ class Director(object):
 
     def __handle_events(self):
         for event in pygame.event.get():
-            print event;
+            # print event;
             #If user wants to quit, just quit.
             if(event.type == pygame.locals.QUIT):
                 self.__running = False;
