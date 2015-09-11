@@ -77,7 +77,6 @@ class Director(object):
     __instance = None;
     @staticmethod
     def instance():
-        print "Director.get_instance()";
         if(Director.__instance is None):
             Director.__instance = Director();
 
@@ -87,7 +86,7 @@ class Director(object):
     ## CTOR                                                                   ##
     ############################################################################
     def __init__(self):
-        print "Director.__init__";
+        ## iVars ##
         self.__surface       = None;
         self.__clock         = None;
         self.__current_scene = None
@@ -126,7 +125,6 @@ class Director(object):
     def change_scene(self, scene):
         self.__current_scene = scene;
 
-
     ############################################################################
     ## Update/Draw/Handle Events - Private                                    ##
     ############################################################################
@@ -134,13 +132,12 @@ class Director(object):
         self.__current_scene.update(dt);
 
     def __draw(self):
-        self.__surface.fill((255, 255, 255));
-        self.__current_scene.draw(self.__surface);
-        pygame.display.update()
+        self.__surface.fill((255, 255, 255));      #Clear.
+        self.__current_scene.draw(self.__surface); #Blit.
+        pygame.display.update();                   #Present.
 
     def __handle_events(self):
         for event in pygame.event.get():
-            # print event;
             #If user wants to quit, just quit.
             if(event.type == pygame.locals.QUIT):
                 self.__running = False;
@@ -148,6 +145,7 @@ class Director(object):
             if(event.type == pygame.locals.KEYDOWN and event.key == pygame.locals.K_END):
                 self.__running = False;
                 return;
+
             #Pass the event to scene handler.
             self.__current_scene.handle_events(event);
 
