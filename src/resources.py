@@ -10,4 +10,10 @@ class Sprites:
     AmazingCowGameLogo = "../resources/Sprite_AmazingCowGameLogo.png";
     GameField          = "../resources/Sprite_GameField.png";
     Food               = "../resources/Sprite_Food.png";
-    Taz                = "../resources/Sprite_Taz.png";
+    TazFrame0          = "../resources/Sprite_TazFrame0.png";
+    TazFrame1          = "../resources/Sprite_TazFrame1.png";
+
+class Fonts:
+    Minecraftia = "../resources/Minecraftia-Regular.ttf";
+
+
