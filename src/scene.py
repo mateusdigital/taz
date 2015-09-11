@@ -44,34 +44,49 @@
 ## Imports ##
 #Pygame
 import pygame;
-#Project
-
-#bass4 the hacker
+#COWTODO: Download the music :~) #bass4 the hacker
 
 ################################################################################
 ## Scene                                                                      ##
 ################################################################################
-class Scene(pygame.sprite.Group):
+# class Scene(pygame.sprite.Group):
+class Scene(pygame.sprite.OrderedUpdates):
+
     def __init__(self):
-        pygame.sprite.Group.__init__(self);
+        pygame.sprite.OrderedUpdates.__init__(self);
+        # pygame.sprite.Group.__init__(self);
 
     def handle_events(self, event):
         pass;
-    def update(self, dt):
-        pass;
 
 ################################################################################
-## Sprite                                                                    ##
+## Sprite                                                                     ##
 ################################################################################
 class Sprite(pygame.sprite.Sprite):
-    def __init__(self):
+    ############################################################################
+    ## CTOR                                                                   ##
+    ############################################################################
+    def __init__(self, surface = None):
         pygame.sprite.Sprite.__init__(self);
         self.rect = pygame.rect.Rect(0,0,0,0);
+        if(surface is not None):
+            self.update_image(surface);
 
+    ############################################################################
+    ## Image Methods                                                          ##
+    ############################################################################
     def load_image(self, filename):
-        print filename;
-        self.image = pygame.image.load(filename);
+        surface = pygame.image.load(filename);
+        self.update_image(surface);
 
+    def update_image(self, surface):
+        self.image   = surface;
+        self.rect[2] = self.image.get_width();
+        self.rect[3] = self.image.get_height();
+
+    ############################################################################
+    ## Positions Setter/Getters                                               ##
+    ############################################################################
     def set_position(self, x, y):
         self.rect[0] = x;
         self.rect[1] = y;
@@ -87,11 +102,22 @@ class Sprite(pygame.sprite.Sprite):
     def get_position_y(self):
         return self.rect[1];
 
+    ############################################################################
+    ## Size Setter/Getters                                                    ##
+    ############################################################################
+    def get_size(self):
+        return self.rect[2], self.rect[3];
+    def get_size_w(self):
+        return self.rect[2];
+    def get_size_h(self):
+        return self.rect[3];
 
+    ############################################################################
+    ## Movement Functions                                                     ##
+    ############################################################################
     def move(self, x, y):
-        self.rect[0] += x;
-        self.rect[1] += y;
+        self.rect.move_ip(x, y);
     def move_x(self, x):
-        self.rect[0] += x;
+        self.move(x, 0);
     def move_y(self, y):
-        self.rect[1] += y;
+        self.move(0, y);
