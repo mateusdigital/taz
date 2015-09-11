@@ -5,7 +5,7 @@
 ##               ████████                                                     ##
 ##             ██        ██                                                   ##
 ##            ███  █  █  ███                                                  ##
-##            █ █        █ █        game_scene.py                             ##
+##            █ █        █ █        menu_scene.py                             ##
 ##             ████████████         Game Taz                                  ##
 ##           █              █       Copyright (c) 2015 AmazingCow             ##
 ##          █     █    █     █      www.AmazingCow.com                        ##
@@ -44,12 +44,13 @@
 #Pygame
 import pygame;
 #Project
-from game       import Director;
-from scene      import Scene;
-from scene      import Sprite;
-from clock      import BasicClock;
-from game_scene import GameScene;
-from resources  import Sprites;
+from game          import Director;
+from scene         import Scene;
+from scene         import Sprite;
+from clock         import BasicClock;
+from game_scene    import GameScene;
+from credits_scene import CreditsScene;
+from resources     import Sprites;
 
 class MenuScene(Scene):
     ############################################################################
@@ -121,5 +122,7 @@ class MenuScene(Scene):
         scene = None;
         if(self.current_index == 0):
             scene = GameScene();
+        else:
+            scene = CreditsScene();
 
         Director.instance().change_scene(scene);
