@@ -142,6 +142,8 @@ class Director(object):
             if(event.type == pygame.locals.QUIT):
                 self.__running = False;
                 return;
+
+            #COWTODO: Remove in release.
             if(event.type == pygame.locals.KEYDOWN and event.key == pygame.locals.K_END):
                 self.__running = False;
                 return;
