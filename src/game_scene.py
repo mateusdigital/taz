@@ -41,6 +41,8 @@
 ##                                  Enjoy :)                                  ##
 ##----------------------------------------------------------------------------##
 ## Imports ##
+#Python
+import random;
 #Pygame
 import pygame;
 #Project
@@ -57,25 +59,28 @@ import pdb; # :~)
 ## MovableObject                                                              ##
 ################################################################################
 class MovableObject(Sprite):
-    TYPE_BOMB = 0;
-    TYPE_FOOD = 1;
+    ############################################################################
+    ## Constants                                                              ##
+    ############################################################################
+    DIRECTION_LEFT   = -1;
+    DIRECTION_RIGHT  = +1;
+    HORIZONTAL_SPEED = 200;
 
-    DIRECTION_LEFT  = +1;
-    DIRECTION_RIGHT = -1;
+    ############################################################################
+    ## CTOR                                                                   ##
+    ############################################################################
+    def __init__(self, track_index, direction,
+                speed_factor, out_of_field_callback):
 
-    def __init__(self, type, track_index, direction):
         Sprite.__init__(self);
 
         ## iVars ##
-        self.__type        = type;
-        self.__track_index = track_index;
-        self.__direction   = direction;
+        self.__track_index           = track_index;
+        self.__direction             = direction;
+        self.__speed_factor          = speed_factor;
+        self.__target_position_x     = 0;
+        self.__out_of_field_callback = out_of_field_callback;
 
-        #Load the correct sprite based upon the type.
-        if(self.__type == MovableObject.TYPE_FOOD):
-            self.load_image(Sprites.Food);
-        else:
-            self.load_image(Sprites.Food);
 
         #Set the position.
         y = GameScene.FIELD_TRACKS_Y[track_index];
@@ -85,8 +90,63 @@ class MovableObject(Sprite):
 
         self.set_position(x, y);
 
+        #Set target position.
+        self.__target_position_x = GameScene.FIELD_HARD_RIGHT;
+        if(direction == MovableObject.DIRECTION_LEFT):
+            self.__target_position_x = GameScene.FIELD_HARD_LEFT;
+
+    ############################################################################
+    ## Public Methods                                                         ##
+    ############################################################################
+    def get_track_index(self):
+        return self.__track_index;
+
+    ############################################################################
+    ## Update                                                                 ##
+    ############################################################################
     def update(self, dt):
-        self.move_x(-200 * self.__direction * (dt / 1000.0));
+        pos_x  = self.get_position_x();
+        size_w = self.get_size_w();
+
+        #Moving to right.
+        if(self.__direction == MovableObject.DIRECTION_RIGHT):
+            if(pos_x > self.__target_position_x):
+                self.__out_of_field_callback(self);
+        #Moving to left.
+        elif(self.__direction == MovableObject.DIRECTION_LEFT):
+            if(pos_x + size_w < self.__target_position_x):
+                self.__out_of_field_callback(self);
+
+        speed = MovableObject.HORIZONTAL_SPEED * self.__direction * self.__speed_factor;
+        self.move_x(speed * (dt / 1000.0));
+
+
+################################################################################
+## Food                                                                       ##
+################################################################################
+class Food(MovableObject):
+    ############################################################################
+    ## CTOR                                                                   ##
+    ############################################################################
+    def __init__(self, track_index, direction,
+                 speed_factor, out_of_field_callback, eat_callback):
+
+        #Call baseclass CTOR.
+        MovableObject.__init__(self, track_index,
+                               direction, speed_factor, out_of_field_callback);
+
+        ## iVars ##
+        self.__eat_callback = eat_callback;
+
+        #Load the Sprites.
+        self.load_image(Sprites.Food);
+
+    ############################################################################
+    ## Update                                                                 ##
+    ############################################################################
+    def update(self, dt):
+        # print self.get_position_x();
+        MovableObject.update(self, dt);
 
 
 
@@ -246,13 +306,14 @@ class Taz(Sprite):
         if(keys[pygame.locals.K_RIGHT]): self.move_horizontal(+1, dt);
 
 
+
 ################################################################################
 ## GameScene                                                                  ##
 ################################################################################
 class GameScene(Scene):
     FIELD_TRACKS_Y   = [62, 94, 126, 158, 190, 222, 254, 285]; #The field tracks.
-    FIELD_HARD_LEFT  = -32 + 10; #Right most positions when other stuff can go.
-    FIELD_HARD_RIGHT = 480 - 10; #Left  most positions when other stuff can go.
+    FIELD_HARD_LEFT  = -22; #Right most positions when other stuff can go.
+    FIELD_HARD_RIGHT = 500; #Left  most positions when other stuff can go.
     FIELD_SOFT_LEFT  = 33;   #Left  most position that Taz can go.
     FIELD_SOFT_RIGHT = 440;  #Right most position that Taz can go.
 
@@ -261,6 +322,10 @@ class GameScene(Scene):
     ############################################################################
     def __init__(self):
         Scene.__init__(self);
+
+        ## iVars ##
+        self.__speed_factor = 1;
+        self.__track_fill   = [False]  * len(GameScene.FIELD_TRACKS_Y);
 
         #GameField.
         self.game_field = Sprite();
@@ -277,6 +342,41 @@ class GameScene(Scene):
         #Taz.
         self.taz = Taz();
         self.add(self.taz);
+
+        #Bombs/Foods
+        self.moveable_objects = [];
+        for i in xrange(0, len(GameScene.FIELD_TRACKS_Y)):
+            self.create_movable_object();
+
+    def create_movable_object(self):
+        #Direction.
+        direction = MovableObject.DIRECTION_RIGHT;
+        if(random.randint(0, 1) % 2 == 0):
+            direction = MovableObject.DIRECTION_LEFT;
+
+        #Track Index.
+        track_index = -1;
+        while(True):
+            index = random.randint(0, len(GameScene.FIELD_TRACKS_Y) -1);
+            if(self.__track_fill[index] == False):
+                track_index = index;
+                break;
+
+        type_index  = random.randint(0, 1);
+
+        mobject = Food(track_index,
+                       direction,
+                       self.__speed_factor,
+                       self.on_movable_object_out_of_field,
+                       None);
+        self.add(mobject);
+        self.__track_fill[track_index] = True;
+
+    def on_movable_object_out_of_field(self, movable_object):
+        self.__track_fill[movable_object.get_track_index()] = False;
+
+        self.remove(movable_object);
+        self.create_movable_object();
 
     ############################################################################
     ## Update/Draw/Handle Events                                              ##
