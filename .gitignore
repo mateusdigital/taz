@@ -1,0 +1,5 @@
+#Ignore the Assets and Resources folders while developing
+#so it will not clutter the git. 
+
+assets/
+resources/
