@@ -44,13 +44,13 @@
 #Pygame
 import pygame;
 #Project
-from game          import Director;
-from scene         import Scene;
-from scene         import Sprite;
-from clock         import BasicClock;
-from game_scene    import GameScene;
-from credits_scene import CreditsScene;
-from resources     import Sprites;
+from   game      import Director;
+from   scene     import Scene;
+from   scene     import Sprite;
+from   clock     import BasicClock;
+from   resources import Sprites;
+import game_scene;
+import credits_scene;
 
 class MenuScene(Scene):
     ############################################################################
@@ -61,20 +61,20 @@ class MenuScene(Scene):
 
         #Init the Sprites....
         #Taz.
-        self.taz_logo = Sprite();
-        self.taz_logo.load_image(Sprites.TazLogo);
-        self.taz_logo.set_position(156, 31);
-        self.add(self.taz_logo);
+        self.__taz_logo = Sprite();
+        self.__taz_logo.load_image(Sprites.TazLogo);
+        self.__taz_logo.set_position(156, 31);
+        self.add(self.__taz_logo);
 
         #Amazing Cow Url.
-        self.cow_url = Sprite();
-        self.cow_url.load_image(Sprites.AmazingCowUrl);
-        self.cow_url.set_position(166, 359);
-        self.add(self.cow_url);
+        self.__cow_url = Sprite();
+        self.__cow_url.load_image(Sprites.AmazingCowUrl);
+        self.__cow_url.set_position(166, 359);
+        self.add(self.__cow_url);
 
         #Menu Options.
-        self.menu_options  = [];
-        self.current_index = 1;
+        self.__menu_options  = [];
+        self.__current_index = 1;
         #Play.
         self.play_option = Sprite();
         self.play_option.load_image(Sprites.MenuPlay);
@@ -84,8 +84,8 @@ class MenuScene(Scene):
         self.credits_option.load_image(Sprites.MenuCredits);
         self.credits_option.set_position(159, 302);
 
-        self.menu_options.append(self.play_option);
-        self.menu_options.append(self.credits_option);
+        self.__menu_options.append(self.play_option);
+        self.__menu_options.append(self.credits_option);
 
         self.change_menu_option();
 
@@ -114,15 +114,15 @@ class MenuScene(Scene):
     ## Other Methods                                                          ##
     ############################################################################
     def change_menu_option(self):
-        self.remove(self.menu_options[self.current_index]);
-        self.current_index = (self.current_index + 1) % 2;
-        self.add(self.menu_options[self.current_index]);
+        self.remove(self.__menu_options[self.__current_index]);
+        self.__current_index = (self.__current_index + 1) % 2;
+        self.add(self.__menu_options[self.__current_index]);
 
     def change_scene(self):
         scene = None;
-        if(self.current_index == 0):
-            scene = GameScene();
+        if(self.__current_index == 0):
+            scene = game_scene.GameScene();
         else:
-            scene = CreditsScene();
+            scene = credits_scene.CreditsScene();
 
         Director.instance().change_scene(scene);
