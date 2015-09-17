@@ -190,7 +190,7 @@ class Food(MovableObject):
     ## State Functions                                                        ##
     ############################################################################
     def __change_state_to_eat(self):
-        self.image.fill((255, 0, 255));
+        self.load_image(Sprites.Game_FoodFrame1);
 
         self._state = Food.STATE_EAT;
         self.__eat_timer.start();
