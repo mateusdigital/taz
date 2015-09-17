@@ -50,6 +50,7 @@ from scene      import Scene;
 from scene      import Sprite;
 from clock      import BasicClock;
 from resources  import Fonts;
+
 import menu_scene; # To avoid circular imports;
 
 class CreditsScene(Scene):
@@ -58,19 +59,9 @@ class CreditsScene(Scene):
     ############################################################################
     def __init__(self):
         Scene.__init__(self);
-        self.__font_size = 13;
-        self.__alias    = True;
+        self.__create_text(True, 16);
 
-        self.create_text(True, 13);
-
-    def create_text(self, alias, font_size):
-        for s in self.sprites():
-            self.remove(s);
-
-        print "alias:", alias;
-        print "font_size", font_size;
-        print;
-
+    def __create_text(self, alias, font_size):
         text = ["This remake was made with <3 by Amazing Cow.",
                 "We hope that you enjoy this little game (!)",
                 "",
@@ -92,53 +83,35 @@ class CreditsScene(Scene):
                 "--- CHECK OUT THE README FILE ---"];
 
 
-        font = pygame.font.Font(Fonts.Minecraftia, font_size);
+        font = pygame.font.Font(Fonts.SourcePro, font_size);
 
         initial_y           = 0;
         middle_screen_x     = Constants.SCREEN_SIZE[0] / 2;
         font_line_size      = font.get_linesize();
         half_font_line_size = font_line_size / 2;
         offset              = initial_y;
-        normal_color        = (0, 0, 0);
-        shadow_color        = (220, 220, 220);
+        normal_color        = Constants.COLOR_BLACK;
         antialias           = alias;
 
         for i in xrange(0, len(text)):
-            line    = text[i];
+            line = text[i];
 
             if(line == ""): offset += half_font_line_size;
             else:           offset += font_line_size;
 
             normal_surface = font.render(line, antialias, normal_color);
-            shadow_surface = font.render(line, antialias, shadow_color);
 
             x = middle_screen_x - normal_surface.get_width() / 2;
             y = offset;
 
-            shadow_sprite = Sprite(shadow_surface);
-            shadow_sprite.set_position(x, y + 2);
-            self.add(shadow_sprite);
-
             normal_sprite = Sprite(normal_surface);
             normal_sprite.set_position(x, y);
             self.add(normal_sprite);
+
     ############################################################################
     ## Update/Draw/Handle Events                                              ##
     ############################################################################
     def handle_events(self, event):
         #We're only interested in keydown events.
         if(event.type == pygame.locals.KEYDOWN and event.key == pygame.locals.K_ESCAPE):
-            # Director.instance().change_scene(menu_scene.MenuScene());
-            pygame.quit();
-            exit(0);
-
-        if(event.type == pygame.locals.KEYDOWN and event.key == pygame.locals.K_a):
-            self.__alias = not self.__alias;
-            self.create_text(self.__alias, self.__font_size);
-
-        if(event.type == pygame.locals.KEYDOWN and event.key == pygame.locals.K_j):
-            self.__font_size -= 1;
-            self.create_text(self.__alias, self.__font_size);
-        if(event.type == pygame.locals.KEYDOWN and event.key == pygame.locals.K_k):
-            self.__font_size += 1;
-            self.create_text(self.__alias, self.__font_size);
+            Director.instance().change_scene(menu_scene.MenuScene());
