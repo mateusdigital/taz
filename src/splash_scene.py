@@ -42,20 +42,19 @@
 ##----------------------------------------------------------------------------##
 
 ## Imports ##
-from scene      import Scene;
-from scene      import Sprite;
 from clock      import BasicClock;
 from game       import Director;
 from menu_scene import MenuScene;
 from resources  import Sprites;
+from scene      import Scene;
+from scene      import Sprite;
 
 class SplashScene(Scene):
     ############################################################################
     ## Constants                                                              ##
     ############################################################################
-    #COWTODO: Change to 500 when dev is over....
-    TIMER_TIME              = 20;
-    TICKS_TO_LOGO_DISAPPEAR = 4;
+    __TIMER_TIME              = 500;
+    __TICKS_TO_LOGO_DISAPPEAR = 4;
 
     ############################################################################
     ## CTOR                                                                   ##
@@ -64,41 +63,38 @@ class SplashScene(Scene):
         Scene.__init__(self);
 
         #Init the Sprite....
-        self.sprite = Sprite();
-        self.sprite.load_image(Sprites.AmazingCowLogo);
-        self.sprite.set_position(91, 81);
+        self.__sprite = Sprite();
+        self.__sprite.load_image(Sprites.AmazingCowLogo);
+        self.__sprite.set_position(91, 81);
 
         #Init the Timer..
-        self.timer = BasicClock(SplashScene.TIMER_TIME);
-        self.timer.set_callback(self.on_timer_tick);
-        self.timer.start();
+        self.__timer = BasicClock(SplashScene.__TIMER_TIME);
+        self.__timer.set_callback(self.__on_timer_tick);
+        self.__timer.start();
 
-        self.timer_ticks_to_sprite_disapear = SplashScene.TICKS_TO_LOGO_DISAPPEAR;
+        self.__timer_ticks_to_sprite_disapear = SplashScene.__TICKS_TO_LOGO_DISAPPEAR;
 
     ############################################################################
     ## Time Callback                                                          ##
     ############################################################################
-    def on_timer_tick(self):
-        if(self.sprite not in self):
-            self.add(self.sprite);
+    def __on_timer_tick(self):
+        if(self.__sprite not in self):
+            self.add(self.__sprite);
         else:
-            self.timer_ticks_to_sprite_disapear -= 1;
-            if(self.timer_ticks_to_sprite_disapear == 0):
-                self.remove(self.sprite);
-                self.timer.stop();
-                self.change_scene();
+            self.__timer_ticks_to_sprite_disapear -= 1;
+            if(self.__timer_ticks_to_sprite_disapear == 0):
+                self.remove(self.__sprite);
+                self.__timer.stop();
+                self.__change_scene();
 
     ############################################################################
     ## Update/Draw/Handle Events                                              ##
     ############################################################################
     def update(self, dt):
-        self.timer.update(dt);
-
-    def draw(self, surface):
-        Scene.draw(self,surface);
+        self.__timer.update(dt);
 
     ############################################################################
     ## Other Methods                                                          ##
     ############################################################################
-    def change_scene(self):
+    def __change_scene(self):
         Director.instance().change_scene(MenuScene());
