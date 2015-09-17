@@ -43,10 +43,10 @@
 
 ## Imports ##
 #Python
-import os;
-import os.path;
-import sys;
 import getopt;
+import os.path;
+import os;
+import sys;
 #Pygame
 import pygame;
 import pygame.locals;
@@ -66,6 +66,8 @@ class Constants:
     GAME_FPS       = 60;
     SCREEN_SIZE    = (480, 378);
     WINDOW_CAPTION = "Taz - v0.1 - AmazingCow";
+    COLOR_BLACK    = (0, 0, 0);
+    COLOR_WHITE    = (255, 255, 255);
 
 ################################################################################
 ## Director                                                                   ##
@@ -132,9 +134,9 @@ class Director(object):
         self.__current_scene.update(dt);
 
     def __draw(self):
-        self.__surface.fill((255, 255, 255));      #Clear.
-        self.__current_scene.draw(self.__surface); #Blit.
-        pygame.display.update();                   #Present.
+        self.__surface.fill(Constants.COLOR_WHITE); #Clear.
+        self.__current_scene.draw(self.__surface);  #Blit.
+        pygame.display.update();                    #Present.
 
     def __handle_events(self):
         for event in pygame.event.get():
