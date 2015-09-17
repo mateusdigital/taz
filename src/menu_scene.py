@@ -62,13 +62,13 @@ class MenuScene(Scene):
         #Init the Sprites....
         #Taz.
         self.__taz_logo = Sprite();
-        self.__taz_logo.load_image(Sprites.TazLogo);
+        self.__taz_logo.load_image(Sprites.Menu_TazLogo);
         self.__taz_logo.set_position(156, 31);
         self.add(self.__taz_logo);
 
         #Amazing Cow Url.
         self.__cow_url = Sprite();
-        self.__cow_url.load_image(Sprites.AmazingCowUrl);
+        self.__cow_url.load_image(Sprites.Menu_AmazingCowUrl);
         self.__cow_url.set_position(166, 359);
         self.add(self.__cow_url);
 
@@ -77,11 +77,11 @@ class MenuScene(Scene):
         self.__current_index = 1;
         #Play.
         self.play_option = Sprite();
-        self.play_option.load_image(Sprites.MenuPlay);
+        self.play_option.load_image(Sprites.Menu_Play);
         self.play_option.set_position(194, 302);
         #Credits.
         self.credits_option = Sprite();
-        self.credits_option.load_image(Sprites.MenuCredits);
+        self.credits_option.load_image(Sprites.Menu_Credits);
         self.credits_option.set_position(159, 302);
 
         self.__menu_options.append(self.play_option);

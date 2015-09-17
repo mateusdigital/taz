@@ -64,7 +64,7 @@ class SplashScene(Scene):
 
         #Init the Sprite....
         self.__sprite = Sprite();
-        self.__sprite.load_image(Sprites.AmazingCowLogo);
+        self.__sprite.load_image(Sprites.Splash_AmazingCowLogo);
         self.__sprite.set_position(91, 81);
 
         #Init the Timer..

@@ -161,7 +161,7 @@ class Food(MovableObject):
         self.__death_callback = death_callback;
 
         #Load the Sprites.
-        self.load_image(Sprites.Food);
+        self.load_image(Sprites.Game_FoodFrame0);
 
         #Initialize the Eat timer;
         self.__eat_timer = BasicClock(Food.TIME_TO_KEEP_DEATH);

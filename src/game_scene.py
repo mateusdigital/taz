@@ -76,15 +76,9 @@ class GameScene(Scene):
 
         #GameField.
         self.__game_field = Sprite();
-        self.__game_field.load_image(Sprites.GameField);
+        self.__game_field.load_image(Sprites.Game_GameField);
         self.__game_field.set_position(8, 30);
         self.add(self.__game_field);
-
-        #AmazingCowLogo.
-        self.__cow_logo = Sprite();
-        self.__cow_logo.load_image(Sprites.AmazingCowGameLogo);
-        self.__cow_logo.set_position(9, 345);
-        self.add(self.__cow_logo);
 
         #Bombs/Foods
         self.__movable_objects = [None] * GameFieldConstants.FIELD_TRACKS_LEN;

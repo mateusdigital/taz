@@ -88,8 +88,8 @@ class Taz(Sprite):
         self.__eat_count      = 0;
 
         #Set the Sprite vars.
-        self.__frames = [pygame.image.load(Sprites.TazFrame0),
-                         pygame.image.load(Sprites.TazFrame1)];
+        self.__frames = [pygame.image.load(Sprites.Game_TazFrame0),
+                         pygame.image.load(Sprites.Game_TazFrame1)];
         self.__current_frame = 0;
         self.update_image(self.__frames[0]);
 
