@@ -89,6 +89,14 @@ class GameScene(Scene):
         self.__taz = Taz(self.__on_taz_death);
         self.add(self.__taz, layer=1);
 
+        #Taz lives.
+        self.__taz_lives = [];
+        for i in xrange(0, 3):
+            live = Taz(None);
+            live.set_position(36 * (i + 1), 338);
+            self.add(live);
+            self.__taz_lives.append(live);
+
 
     ############################################################################
     ## Movable Objects Management                                             ##
@@ -118,17 +126,20 @@ class GameScene(Scene):
         self.add(mobject, layer=0);
         self.__movable_objects[track_index] = mobject;
 
-    def __remove_movable_object(self, movable_object):
+    def __remove_movable_object(self, movable_object, create_another_object = True):
         self.__movable_objects[movable_object.get_track_index()] = None;
         self.remove(movable_object);
-        self.__create_movable_object();
+
+        if(create_another_object):
+            self.__create_movable_object();
 
 
     ############################################################################
     ## Object Callbacks                                                       ##
     ############################################################################
     def __on_taz_death(self):
-        print "TAZ DEATH";
+        live = self.__taz_lives.pop();
+        self.remove(live);
 
     def __on_food_death(self, food):
         self.__remove_movable_object(food);
@@ -160,6 +171,10 @@ class GameScene(Scene):
         self.__taz.set_controls(Taz.CONTROL_DOWN,  keys[pygame.locals.K_DOWN]);
         self.__taz.set_controls(Taz.CONTROL_UP,    keys[pygame.locals.K_UP]);
 
+        #Update the lives.
+        for live in self.__taz_lives:
+            live.update(dt);
+
         #Update the Taz and the MovableObjects.
         self.__taz.update(dt);
 
@@ -181,6 +196,9 @@ class GameScene(Scene):
         #Up and Down change the option.
         if(key == pygame.locals.K_ESCAPE):
             self.__change_to_menu_scene();
+
+        if(key == pygame.locals.K_k):
+            self.__taz.set_dead();
 
 
     ############################################################################
