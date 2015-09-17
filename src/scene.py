@@ -50,12 +50,12 @@ import pygame;
 ## Scene                                                                      ##
 ################################################################################
 # class Scene(pygame.sprite.Group):
-class Scene(pygame.sprite.OrderedUpdates):
-
+# class Scene(pygame.sprite.OrderedUpdates):
+class Scene(pygame.sprite.LayeredUpdates):
     def __init__(self):
-        pygame.sprite.OrderedUpdates.__init__(self);
+        # pygame.sprite.OrderedUpdates.__init__(self);
         # pygame.sprite.Group.__init__(self);
-
+        pygame.sprite.LayeredUpdates.__init__(self);
     def handle_events(self, event):
         pass;
 
