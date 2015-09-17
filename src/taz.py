@@ -135,6 +135,8 @@ class Taz(Sprite):
     def get_state(self):
         return self.__state;
 
+    def set_dead(self):
+        self.__change_state_to_dead();
 
     ############################################################################
     ## Update                                                                 ##
@@ -182,7 +184,7 @@ class Taz(Sprite):
         self.__current_frame = (self.__current_frame + 1) % 2;
 
     def __on_death_timer_tick(self):
-        self.change_state_to_alive();
+        self.__change_state_to_alive();
 
 
     ############################################################################
