@@ -45,10 +45,11 @@ class BasicClock(object):
     ############################################################################
     ## CTOR                                                                   ##
     ############################################################################
-    def __init__(self, time):
+    def __init__(self, time, tick_callback = None):
         self.__tick_time            = time;
         self.__time_since_last_tick = None;
         self.__enabled              = False;
+        self.__tick_callback        = tick_callback;
 
     ############################################################################
     ## Set/Get Time                                                           ##
