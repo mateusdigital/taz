@@ -51,9 +51,11 @@ from   clock                import BasicClock;
 from   game                 import Constants;
 from   game                 import Director;
 from   game_field_constants import GameFieldConstants;
-from   movable_object       import Food;
 from   movable_object       import MovableObject;
+from   food                 import Food;
+from   bomb                 import Bomb;
 from   resources            import Sprites;
+from   resources            import Fonts;
 from   scene                import Scene;
 from   scene                import Sprite;
 from   taz                  import Taz;
@@ -64,7 +66,11 @@ class GameScene(Scene):
     ## Constants                                                              ##
     ############################################################################
     __EAT_THRESHOLD          = [30, 60, 90, 150, 200, 250,350, 450, 600];
-    __SPEED_FACTOR_INCREMENT = 0.2;
+    __SPEED_FACTOR_INCREMENT = 0.1;
+
+    __STATE_GAME_OVER = 0;
+    __STATE_NEW_TURN  = 1;
+    __STATE_END_TURN  = 2;
 
     ############################################################################
     ## CTOR                                                                   ##
@@ -72,7 +78,16 @@ class GameScene(Scene):
     def __init__(self):
         Scene.__init__(self);
         ## iVars ##
-        self.__speed_factor = 1;
+        self.__speed_factor   = 1;
+        self.__game_state     = None;
+        self.__new_turn_timer = BasicClock(500, self.__on_new_turn_timer_tick);
+
+        self.__movable_object_func = [
+            self.__create_food,
+            self.__create_bomb
+        ];
+
+        self.__score_font = pygame.font.Font(Fonts.SourcePro, 20);
 
         #GameField.
         self.__game_field = Sprite();
@@ -80,78 +95,27 @@ class GameScene(Scene):
         self.__game_field.set_position(8, 30);
         self.add(self.__game_field);
 
-        #Bombs/Foods
-        self.__movable_objects = [None] * GameFieldConstants.FIELD_TRACKS_LEN;
-        for _ in xrange(0, GameFieldConstants.FIELD_TRACKS_LEN):
-            self.__create_movable_object();
-
-        #Taz.
-        self.__taz = Taz(self.__on_taz_death);
-        self.add(self.__taz, layer=1);
-
         #Taz lives.
         self.__taz_lives = [];
-        for i in xrange(0, 3):
+        for i in xrange(0, Taz.MAX_LIVES):
             live = Taz(None);
             live.set_position(36 * (i + 1), 338);
             self.add(live);
             self.__taz_lives.append(live);
 
+        #Taz.
+        self.__taz = Taz(self.__on_taz_death_animation_completed);
+        self.add(self.__taz, layer=1);
 
-    ############################################################################
-    ## Movable Objects Management                                             ##
-    ############################################################################
-    def __create_movable_object(self):
-        #Direction.
-        direction = MovableObject.DIRECTION_RIGHT;
-        if(random.randint(0, 1) % 2 == 0):
-            direction = MovableObject.DIRECTION_LEFT;
+        #Movable Objects.
+        self.__movable_objects = [None] * GameFieldConstants.FIELD_TRACKS_LEN;
 
-        #Track Index.
-        track_index = -1;
-        while(True):
-            index = random.randint(0, GameFieldConstants.FIELD_TRACKS_LEN -1);
-            if(self.__movable_objects[index] is None):
-                track_index = index;
-                break;
+        #Score Sprite.
+        self.__score_sprite = Sprite();
+        self.add(self.__score_sprite);
+        self.__update_score();
 
-        type_index  = random.randint(0, 1);
-        mobject = Food(track_index,
-                       direction,
-                       self.__speed_factor,
-                       self.__on_movable_object_out_of_field,
-                       self.__on_food_eat,
-                       self.__on_food_death);
-
-        self.add(mobject, layer=0);
-        self.__movable_objects[track_index] = mobject;
-
-    def __remove_movable_object(self, movable_object, create_another_object = True):
-        self.__movable_objects[movable_object.get_track_index()] = None;
-        self.remove(movable_object);
-
-        if(create_another_object):
-            self.__create_movable_object();
-
-
-    ############################################################################
-    ## Object Callbacks                                                       ##
-    ############################################################################
-    def __on_taz_death(self):
-        live = self.__taz_lives.pop();
-        self.remove(live);
-
-    def __on_food_death(self, food):
-        self.__remove_movable_object(food);
-
-    def __on_movable_object_out_of_field(self, movable_object):
-       self.__remove_movable_object(movable_object);
-
-    def __on_food_eat(self, food):
-        self.__taz.increment_eat_count();
-        print self.__taz.get_eat_count();
-        if(self.__taz.get_eat_count() in GameScene.__EAT_THRESHOLD):
-            self.__speed_factor += GameScene.__SPEED_FACTOR_INCREMENT;
+        self.__change_state_to_new_turn();
 
 
     ############################################################################
@@ -162,6 +126,8 @@ class GameScene(Scene):
         Scene.draw(self, surface);
 
     def update(self, dt):
+        self.__new_turn_timer.update(dt);
+
         #Get the state of keyboard.
         keys = pygame.key.get_pressed();
 
@@ -177,6 +143,10 @@ class GameScene(Scene):
 
         #Update the Taz and the MovableObjects.
         self.__taz.update(dt);
+
+        #Only update the MovableObjects if Taz is alive.
+        if(self.__taz.get_state() != Taz.STATE_ALIVE):
+            return;
 
         for obj in self.__movable_objects:
             if(obj is not None):
@@ -202,7 +172,117 @@ class GameScene(Scene):
 
 
     ############################################################################
+    ## Object Callbacks                                                       ##
+    ############################################################################
+    def __on_taz_death_animation_completed(self):
+        #Check game over.
+        if(self.__taz.get_lives() == 0):
+            self.__change_state_to_game_over();
+        else:
+            self.__change_state_to_end_turn();
+
+    def __on_bomb_collision(self, bomb):
+        self.__taz.set_dead();
+
+        #Remove the Taz live from Scene.
+        live = self.__taz_lives.pop();
+        self.remove(live);
+
+    def __on_food_collision(self, food):
+        #Increment the Taz eat count, update the score
+        #and finally check if enough foods were ate to increment
+        #the difficulty.
+        self.__taz.increment_eat_count();
+        self.__update_score();
+        if(self.__taz.get_eat_count() in GameScene.__EAT_THRESHOLD):
+            self.__speed_factor += GameScene.__SPEED_FACTOR_INCREMENT;
+
+
+    ############################################################################
+    ## Update / Draw / Handle Events                                          ##
+    ############################################################################
+    def __on_new_turn_timer_tick(self):
+        self.__new_turn_timer.stop();
+        self.__change_state_to_new_turn();
+
+    def __change_state_to_new_turn(self):
+        for mobj in self.__movable_objects:
+            self.__create_movable_object();
+
+        self.__game_state = GameScene.__STATE_NEW_TURN;
+
+    def __change_state_to_end_turn(self):
+        for mobj in self.__movable_objects:
+            self.__remove_movable_object(mobj);
+
+        self.__game_state = GameScene.__STATE_END_TURN;
+        self.__new_turn_timer.start();
+
+    def __change_state_to_game_over(self):
+        self.__game_state = GameScene.__STATE_GAME_OVER;
+        self.__change_to_menu_scene();
+
+
+    ############################################################################
+    ## Movable Objects Management                                             ##
+    ############################################################################
+    def __create_movable_object(self):
+        #Direction.
+        direction = MovableObject.DIRECTION_RIGHT;
+        if(random.randint(0, 1) % 2 == 0):
+            direction = MovableObject.DIRECTION_LEFT;
+
+        #Track Index.
+        track_index = self.__get_empty_track_index();
+
+        #Type
+        type_index  = random.randint(0, 1);
+        mobj = self.__movable_object_func[type_index](track_index, direction);
+
+        self.add(mobj, layer=0);
+        self.__movable_objects[track_index] = mobj;
+
+    def __remove_movable_object(self, movable_object):
+        if(movable_object is None): return;
+
+        self.__movable_objects[movable_object.get_track_index()] = None;
+        self.remove(movable_object);
+
+    def __remove_and_create_movable_object(self, movable_object):
+        self.__remove_movable_object(movable_object);
+        self.__create_movable_object();
+
+
+    ############################################################################
     ## Ohter Functions                                                        ##
     ############################################################################
+    def __update_score(self):
+        surface = self.__score_font.render(str(self.__taz.get_eat_count()),
+                                     False,
+                                     (187, 187, 53));
+
+        self.__score_sprite.update_image(surface);
+        self.__score_sprite.set_position(413, 342);
+
+    def __get_empty_track_index(self):
+        while(True):
+            index = random.randint(0, GameFieldConstants.FIELD_TRACKS_LEN -1);
+            if(self.__movable_objects[index] is None):
+                return index;
+
+    def __create_food(self, track_index, direction):
+        return Food(track_index, direction,
+                    self.__speed_factor,
+                    self.__remove_and_create_movable_object,
+                    self.__on_food_collision,
+                    self.__remove_and_create_movable_object);
+
+    def __create_bomb(self, track_index, direction):
+        return Bomb(track_index, direction,
+                    self.__speed_factor,
+                    self.__remove_and_create_movable_object,
+                    self.__on_bomb_collision);
+
+
     def __change_to_menu_scene(self):
         Director.instance().change_scene(menu_scene.MenuScene());
