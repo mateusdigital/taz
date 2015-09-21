@@ -60,7 +60,7 @@ class Taz(Sprite):
     SCALE_FACTOR     = 1.5;
     HORIZONTAL_SPEED = 500;
 
-    TIME_TO_CHANGE_TRACK     = 40;
+    TIME_TO_CHANGE_TRACK     = 70;
     TIME_TO_NORMAL_ANIMATION = 150;
     TIME_TO_DEATH_ANIMATION  = 1400;
 
@@ -77,15 +77,15 @@ class Taz(Sprite):
     ############################################################################
     ## CTOR                                                                   ##
     ############################################################################
-    def __init__(self, death_callback):
+    def __init__(self, death_animation_callback):
         Sprite.__init__(self);
 
         ## iVars ##
-        self.__death_callback = death_callback;
-        self.__state          = Taz.STATE_ALIVE;
-        self.__lives          = Taz.MAX_LIVES;
-        self.__controls       = [False, False, False, False];
-        self.__eat_count      = 0;
+        self.__death_animation_callback = death_animation_callback;
+        self.__state                    = Taz.STATE_ALIVE;
+        self.__lives                    = Taz.MAX_LIVES;
+        self.__controls                 = [False, False, False, False];
+        self.__eat_count                = 0;
 
         #Set the Sprite vars.
         self.__frames = [pygame.image.load(Sprites.Game_TazFrame0),
@@ -98,8 +98,7 @@ class Taz(Sprite):
         self.__can_change_track = True;
 
         #Set the Initial Position.
-        self.set_position(GameFieldConstants.TAZ_INITIAL_POSITION_X,
-                          GameFieldConstants.TAZ_INITIAL_POSITION_Y);
+        self.reset_position();
 
         #Initialize the Track Change timer.
         self.__change_track_timer = BasicClock(Taz.TIME_TO_CHANGE_TRACK);
@@ -110,8 +109,8 @@ class Taz(Sprite):
         self.__normal_animation_timer.set_callback(self.__on_normal_animation_timer_tick);
 
         #Initialize the Death Animation Timer.
-        self.__death_timer = BasicClock(Taz.TIME_TO_DEATH_ANIMATION);
-        self.__death_timer.set_callback(self.__on_death_timer_tick);
+        self.__death_animation_timer = BasicClock(Taz.TIME_TO_DEATH_ANIMATION);
+        self.__death_animation_timer.set_callback(self.__on_death_animation_timer_tick);
 
         #Start the Normal animation timer.
         self.__normal_animation_timer.start();
@@ -138,6 +137,10 @@ class Taz(Sprite):
     def set_dead(self):
         self.__change_state_to_dead();
 
+    def reset_position(self):
+        self.set_position(GameFieldConstants.TAZ_INITIAL_POSITION_X,
+                          GameFieldConstants.TAZ_INITIAL_POSITION_Y);
+
     ############################################################################
     ## Update                                                                 ##
     ############################################################################
@@ -145,7 +148,7 @@ class Taz(Sprite):
         #Update the timers...
         self.__change_track_timer.update(dt);
         self.__normal_animation_timer.update(dt);
-        self.__death_timer.update(dt);
+        self.__death_animation_timer.update(dt);
 
         #If dead do not move.
         if(self.__state == Taz.STATE_DEAD):
@@ -183,7 +186,8 @@ class Taz(Sprite):
 
         self.__current_frame = (self.__current_frame + 1) % 2;
 
-    def __on_death_timer_tick(self):
+    def __on_death_animation_timer_tick(self):
+        self.__death_animation_callback();
         self.__change_state_to_alive();
 
 
@@ -228,13 +232,11 @@ class Taz(Sprite):
     ## State Functions                                                        ##
     ############################################################################
     def __change_state_to_alive(self):
-        print "Taz - Change State to Alive...";
-        self.__death_timer.stop();
+        self.__death_animation_timer.stop();
         self.__state = Taz.STATE_ALIVE;
 
     def __change_state_to_dead(self):
-        print "Taz - Change State to Dead...";
-        self.__death_timer.start();
+        self.__death_animation_timer.start();
         self.__state = Taz.STATE_DEAD;
         self.__lives -= 1;
-        self.__death_callback();
+
