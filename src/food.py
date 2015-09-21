@@ -5,7 +5,7 @@
 ##               ████████                                                     ##
 ##             ██        ██                                                   ##
 ##            ███  █  █  ███                                                  ##
-##            █ █        █ █        movable_object.py                         ##
+##            █ █        █ █        food.py                                   ##
 ##             ████████████         Game Taz                                  ##
 ##           █              █       Copyright (c) 2015 AmazingCow             ##
 ##          █     █    █     █      www.AmazingCow.com                        ##
@@ -49,125 +49,76 @@ from clock                import BasicClock;
 from game_field_constants import GameFieldConstants;
 from resources            import Sprites;
 from scene                import Sprite;
+from movable_object       import MovableObject;
 
 ################################################################################
-## MovableObject                                                              ##
+## Food                                                                       ##
 ################################################################################
-class MovableObject(Sprite):
+class Food(MovableObject):
     ############################################################################
-    ## Constants                                                              ##
+    ## CONSTANTS                                                              ##
     ############################################################################
-    DIRECTION_LEFT   = -1;
-    DIRECTION_RIGHT  = +1;
-    HORIZONTAL_SPEED = 200;
-
-    STATE_NORMAL       = 1;
-    STATE_COLLIDED     = 2;
-    STATE_OUT_OF_FIELD = 3;
+    STATE_DEATH        = 1000;
+    TIME_TO_KEEP_DEATH = 2000;
 
     ############################################################################
     ## CTOR                                                                   ##
     ############################################################################
     def __init__(self, track_index, direction, speed_factor,
                  out_of_field_callback,
-                 collision_callback):
+                 collision_callback,
+                 death_callback):
 
-        Sprite.__init__(self); #Base class CTOR.
+        #Call baseclass CTOR.
+        MovableObject.__init__(self, track_index, direction, speed_factor,
+                               out_of_field_callback,
+                               collision_callback);
 
         ## iVars ##
-        #Private
-        self.__track_index           = track_index;
-        self.__direction             = direction;
-        self.__speed_factor          = speed_factor;
-        self.__target_position_x     = 0;
+        self.__death_callback = death_callback;
 
-        self.__out_of_field_callback = out_of_field_callback;
-        self.__collision_callback    = collision_callback;
+        #Load the Sprites.
+        self.load_image(Sprites.Game_FoodFrame0);
 
-        #Protected.
-        self._state                  = MovableObject.STATE_NORMAL;
-
-        #Set the position.
-        y = GameFieldConstants.FIELD_TRACKS_Y[track_index];
-        x = GameFieldConstants.FIELD_HARD_LEFT;
-        if(direction == MovableObject.DIRECTION_LEFT):
-            x = GameFieldConstants.FIELD_HARD_RIGHT;
-
-        self.set_position(x, y);
-
-        #Set target position.
-        self.__target_position_x = GameFieldConstants.FIELD_HARD_RIGHT;
-        if(direction == MovableObject.DIRECTION_LEFT):
-            self.__target_position_x = GameFieldConstants.FIELD_HARD_LEFT;
+        #Initialize the Eat timer;
+        self.__eat_timer = BasicClock(Food.TIME_TO_KEEP_DEATH);
+        self.__eat_timer.set_callback(self.__on_eat_timer_tick);
 
 
     ############################################################################
-    ## Public Methods                                                         ##
+    ## Timer Callbacks                                                        ##
     ############################################################################
-    def get_track_index(self):
-        return self.__track_index;
-
-    def get_state(self):
-        return self._state;
-
-    def collide_with_taz(self, taz):
-        #Check if already collided with taz.
-        if(self._state != MovableObject.STATE_NORMAL):
-            return;
-
-        #Check if Taz intersects with this object and
-        #give a change to object to change the internal state
-        #and inform the collision to listener.
-        if(pygame.rect.Rect.colliderect(self.rect, taz.rect)):
-            self._state = MovableObject.STATE_COLLIDED;
-            self._change_state_to_collided();
-            self.__collision_callback(self);
+    def __on_eat_timer_tick(self):
+        self.__change_state_to_dead();
 
 
     ############################################################################
-    ## Abstract State Methods                                                 ##
+    ## Override State Methods                                                 ##
     ############################################################################
     def _change_state_to_collided(self):
-        print "MUST OVERRIDE _change_state_to_collided", self;
-        exit(1);
+        self.load_image(Sprites.Game_FoodFrame1);
+        self.__eat_timer.start();
 
     def _change_state_to_out_of_field(self):
-        print "MUST OVERRIDE _change_state_to_out_of_field", self;
-        exit(1);
+        pass;
+
+    def __change_state_to_dead(self):
+        self._state = Food.STATE_DEATH;
+        self.__eat_timer.stop();
+        self.__death_callback(self);
+
 
     ############################################################################
     ## Update                                                                 ##
     ############################################################################
     def update(self, dt):
-        #Only move if state is Normal.
-        if(self._state != MovableObject.STATE_NORMAL):
-            return ;
+        #Update the timer (if Food isn't ate, this timer won't do nothing.)
+        self.__eat_timer.update(dt);
 
-        pos_x  = self.get_position_x();
-        size_w = self.get_size_w();
-
-        out_of_field = False;
-
-        #Moving to right.
-        if((self.__direction == MovableObject.DIRECTION_RIGHT) and
-           (pos_x > self.__target_position_x)):
-                out_of_field = True;
-
-        #Moving to left.
-        elif((self.__direction == MovableObject.DIRECTION_LEFT) and
-             (pos_x + size_w < self.__target_position_x)):
-                out_of_field = True;
+        #Call the base class function to keep the movement
+        #only if food isn't ate.
+        if(self._state == MovableObject.STATE_NORMAL):
+            MovableObject.update(self, dt);
 
 
-        #Object is out of field, so give a change to object change
-        #the internal state and inform it to listener.
-        if(out_of_field):
-            self._state = MovableObject.STATE_OUT_OF_FIELD;
-            self._change_state_to_out_of_field();
-            self.__out_of_field_callback(self);
-
-        #Object is inside of field, keep moving.
-        else:
-            speed = MovableObject.HORIZONTAL_SPEED * self.__direction * self.__speed_factor;
-            self.move_x(speed * (dt / 1000.0));
 
