@@ -43,18 +43,26 @@
 class Sprites:
     #SplashScene...
     Splash_AmazingCowLogo = "../resources/SceneSplash/Sprite_AmazingCowLogo.png";
+
+
     #MenuScene...
     Menu_TazLogo       = "../resources/SceneMenu/Sprite_TazLogo.png";
     Menu_AmazingCowUrl = "../resources/SceneMenu/Sprite_AmazingCowURL.png";
     Menu_Play          = "../resources/SceneMenu/Sprite_Play.png";
     Menu_Credits       = "../resources/SceneMenu/Sprite_Credits.png";
+
+
     #GameScnee...
     Game_LogoIcon   = "../resources/SceneGame/Sprite_AmazingCowGameLogo.png";
     Game_LogoName   = "../resources/SceneGame/Sprite_AmazingCowGameLogo.png";
+
     Game_GameField  = "../resources/SceneGame/Sprite_GameField.png";
+
     Game_Bomb       = "../resources/SceneGame/Sprite_Bomb.png";
+
     Game_FoodFrame0 = "../resources/SceneGame/Sprite_FoodFrame0.png";
     Game_FoodFrame1 = "../resources/SceneGame/Sprite_FoodFrame1.png";
+
     Game_TazFrame0  = "../resources/SceneGame/Sprite_TazFrame0.png";
     Game_TazFrame1  = "../resources/SceneGame/Sprite_TazFrame1.png";
 
