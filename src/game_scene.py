@@ -61,6 +61,7 @@ from   scene                import Sprite;
 from   taz                  import Taz;
 import menu_scene; #To avoid circular imports;
 
+##COWTODO: THIS FILE IS TOO BIG AND TOO MESSY.
 class GameScene(Scene):
     ############################################################################
     ## Constants                                                              ##
@@ -87,7 +88,7 @@ class GameScene(Scene):
             self.__create_bomb
         ];
 
-        self.__score_font = pygame.font.Font(Fonts.SourcePro, 20);
+        self.__score_font = pygame.font.Font(Fonts.Visitor, 40);
 
         #GameField.
         self.__game_field = Sprite();
@@ -257,12 +258,13 @@ class GameScene(Scene):
     ## Ohter Functions                                                        ##
     ############################################################################
     def __update_score(self):
-        surface = self.__score_font.render(str(self.__taz.get_eat_count()),
+        score = "%05d" %(self.__taz.get_eat_count() * 50);
+        surface = self.__score_font.render(score,
                                      False,
-                                     (187, 187, 53));
+                                     (187, 187, 53));                                    
 
         self.__score_sprite.update_image(surface);
-        self.__score_sprite.set_position(413, 342);
+        self.__score_sprite.set_position(325, 339);
 
     def __get_empty_track_index(self):
         while(True):

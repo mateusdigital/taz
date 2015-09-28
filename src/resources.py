@@ -40,6 +40,7 @@
 ##                                                                            ##
 ##                                  Enjoy :)                                  ##
 ##----------------------------------------------------------------------------##
+
 class Sprites:
     #SplashScene...
     Splash_AmazingCowLogo = "../resources/SceneSplash/Sprite_AmazingCowLogo.png";
@@ -68,5 +69,6 @@ class Sprites:
 
 class Fonts:
     SourcePro = "../resources/SourceCodePro-Regular.ttf";
+    Visitor   = "../resources/visitor1.ttf";
 
 
