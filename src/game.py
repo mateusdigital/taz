@@ -63,7 +63,7 @@ class Globals:
 ## Constants                                                                  ##
 ################################################################################
 class Constants:
-    GAME_FPS       = 60;
+    GAME_FPS       = 120;
     SCREEN_SIZE    = (480, 378);
     WINDOW_CAPTION = "Taz - v0.1 - AmazingCow";
     COLOR_BLACK    = (0, 0, 0);
@@ -152,6 +152,5 @@ class Director(object):
 
             #Pass the event to scene handler.
             self.__current_scene.handle_events(event);
-
 
 
