@@ -258,10 +258,13 @@ class GameScene(Scene):
     ## Ohter Functions                                                        ##
     ############################################################################
     def __update_score(self):
+        #COWTODO: Make score change color...
         score = "%05d" %(self.__taz.get_eat_count() * 50);
+        a= self.__taz.get_eat_count();
         surface = self.__score_font.render(score,
                                      False,
-                                     (187, 187, 53));                                    
+                                     (a,a, a));
+                                     #(187, 187, 53));                                    
 
         self.__score_sprite.update_image(surface);
         self.__score_sprite.set_position(325, 339);
