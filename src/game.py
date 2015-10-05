@@ -54,12 +54,6 @@ import pygame.locals;
 import scene;
 
 ################################################################################
-## Globals                                                                    ##
-################################################################################
-class Globals:
-    pass;
-
-################################################################################
 ## Constants                                                                  ##
 ################################################################################
 class Constants:
@@ -112,7 +106,7 @@ class Director(object):
         self.__running = True;
 
         while(self.__running):
-            dt = self.__clock.tick(Constants.GAME_FPS);
+            dt = self.__clock.tick_busy_loop(Constants.GAME_FPS);
 
             self.__handle_events();
             self.__update(dt);
