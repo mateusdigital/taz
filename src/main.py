@@ -43,10 +43,9 @@
 
 ## Imports ##
 #Project
-from game         import Director;
-from splash_scene import SplashScene;
-from game_scene   import GameScene;
-from credits_scene   import CreditsScene;
+from game            import Director;
+from splash_scene    import SplashScene;
+
 ################################################################################
 ## Script Initialization                                                      ##
 ################################################################################
@@ -55,9 +54,8 @@ def main():
 
     director.init();
 
-    # director.change_scene(SplashScene());
-    # director.change_scene(GameScene());
-    director.change_scene(CreditsScene());
+    director.change_scene(SplashScene());
+
     director.run();
     director.clean();
 
