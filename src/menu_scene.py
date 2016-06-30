@@ -61,36 +61,40 @@ class MenuScene:
     ## Init                                                                   ##
     ############################################################################
     def __init__(self):
-        director.set_clear_color(COLOR_BLACK);
+        director.set_clear_color(COLOR_WHITE);
 
         wcenter = (GAME_WIN_WIDTH * 0.5);
 
         ## Logo
-        self._logo      = assets.load_image("Taz_Logo.png");
-        self._logo_size = self._logo.get_size();
-        self._logo_pos  = (wcenter - (self._logo_size[0] * 0.5), 150);
+        self._logo     = assets.load_image("Taz_Logo.png");
+        logo_size      = self._logo.get_size();
+        self._logo_pos = (wcenter - (logo_size[0] * 0.5), 20);
 
         ########################################################################
         ## COWTODO: WE REALLY NEED TO IMPROVE THE INTERFACE                   ##
         ## FOR CREATE AND SETUP TEXTS... IT SUCKS A LOT TODAY...              ##
         ########################################################################
         ## Play
-        self._play_text = Text(FONT_NAME, 40, -1, -1, "Play", COLOR_BROWN);
+        self._play_text = Text(FONT_NAME, FONT_MENU_SIZE,
+                               -1, -1,
+                               "Play", COLOR_BROWN);
         play_size = self._play_text.get_size();
-        self._play_text.set_position(wcenter - (play_size[0] * 0.5), 250);
+        self._play_text.set_position(wcenter - (play_size[0] * 0.5), 300);
 
         ## Credits
-        self._credits_text = Text(FONT_NAME, 40, -1, -1, "Credits", COLOR_BROWN);
+        self._credits_text = Text(FONT_NAME, FONT_MENU_SIZE,
+                                  -1, -1,
+                                  "Credits", COLOR_BROWN);
         credits_size = self._credits_text.get_size();
-        self._credits_text.set_position(wcenter - (credits_size[0] * 0.5), 350);
+        self._credits_text.set_position(wcenter - (credits_size[0] * 0.5), 360);
 
         ## AmazingCow
-        self._amazingcow_text = Text(FONT_NAME, FONT_SIZE,
+        self._amazingcow_text = Text(FONT_NAME, FONT_MENU_LOGO_SIZE,
                                      -1, -1, "amazingcow - 2016",
                                      COLOR_BROWN);
         amazing_size = self._amazingcow_text.get_size();
         self._amazingcow_text.set_position(wcenter - (amazing_size[0] * 0.5),
-                                           GAME_WIN_HEIGHT - (amazing_size[1] + 20));
+                                           GAME_WIN_HEIGHT - (amazing_size[1] + 10));
 
         ## Selection
         self._curr_selection = -1;
