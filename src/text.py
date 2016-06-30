@@ -86,6 +86,10 @@ class Text:
         self.x = x;
         self.y = y;
 
+    def get_position(self):
+        return [self.x, self.y];
+
+
     def set_contents(self, contents):
         self.contents = contents;
 
