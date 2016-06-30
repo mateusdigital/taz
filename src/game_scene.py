@@ -45,22 +45,25 @@
 ################################################################################
 ## Pygame ##
 import pygame;
+import pygame.locals;
 ## Project ##
 import director;
 import assets;
 import sound;
+import input;
 import position_helpers;
 from constants import *;
 from taz       import *;
+from hud       import *;
 
 
 class GameScene():
     ############################################################################
     ## Constants                                                              ##
     ############################################################################
-    _STATE_GAME_OVER = 0;
-    _STATE_NEW_TURN  = 1;
-    _STATE_END_TURN  = 2;
+    _STATE_PLAYING   = 0;
+    _STATE_PAUSED    = 1;
+    _STATE_GAME_OVER = 2;
 
 
     ############################################################################
@@ -69,36 +72,86 @@ class GameScene():
     def __init__(self):
         director.set_clear_color(COLOR_BLACK);
 
-        self._game_state = None;
+        ## Housekeeping
+        self._game_state = GameScene._STATE_PLAYING;
 
+        ## Game Field
         self._game_field     = assets.load_image("GameField.png");
-        self._game_field_pos = position_helpers.get_center_on(
-                                       self._game_field,
-                                       director.get_draw_surface()
-                               );
-        game_field_size = self._game_field.get_size();
+        game_field_size      = self._game_field.get_size();
+        self._game_field_pos = (GAME_WIN_CENTER_X - game_field_size[0] * 0.5,
+                                GAME_WIN_CENTER_Y - game_field_size[1] * 0.5);
 
+        game_field_size = self._game_field.get_size();
+        game_field_min = [self._game_field_pos[0] + 28,
+                          self._game_field_pos[1] + 32];
+        game_field_max = [self._game_field_pos[0] + game_field_size[0] - 28,
+                          self._game_field_pos[1] + game_field_size[1] - 32];
+
+        ## Taz
+        #COWTODO: Remove the magic numbers.
         self._taz = Taz(
-            min_bounds = [self._game_field_pos[0] + 28,
-                          self._game_field_pos[1] + 32],
-            max_bounds = [self._game_field_pos[0] + game_field_size[0] - 28,
-                          self._game_field_pos[1] + game_field_size[1] - 32]
+            min_bounds  = game_field_min,
+            max_bounds  = game_field_max,
+            is_playable = True
         );
+
+        ## Enemies
         self._enemies = [];
 
 
+        ## Hud
+        self._hud = Hud(game_field_min, game_field_max);
+
 
     ############################################################################
-    ## Update / Draw / Handle Events                                          ##
+    ## Update                                                                 ##
+    ############################################################################
+    def update(self, dt):
+        if(self._game_state == GameScene._STATE_PLAYING):
+            self._update_playing(dt);
+        elif(self._game_state == GameScene._STATE_PAUSED):
+            self._update_paused(dt);
+        elif(self._game_state == GameScene._STATE_GAME_OVER):
+            self._update_game_over(dt);
+
+
+    def _update_playing(self, dt):
+        ## Input
+        if(input.is_click(pygame.locals.K_p)):
+            self._game_state = GameScene._STATE_PAUSED;
+            return;
+
+        ## Updates
+        self._taz.update(dt);
+        #COWTODO: Enemies...
+
+        self._hud.update(dt);
+        ## Collisions
+        #COWTODO: Implement...
+
+
+        ## Check Game State.
+        if(self._taz.get_lives() == 0):
+            self._game_state = GameScene._STATE_GAME_OVER;
+            return;
+
+
+    def _update_paused(self, dt):
+        ## Input
+        if(input.is_click(pygame.locals.K_p)):
+            self._game_state = GameScene._STATE_PLAYING;
+
+
+    def _update_game_over(self, dt):
+        ## Input
+        if(input.is_click(pygame.locals.K_SPACE)):
+            director.go_to_menu();
+
+
+    ############################################################################
+    ## Draw                                                                   ##
     ############################################################################
     def draw(self, surface):
         surface.blit(self._game_field, self._game_field_pos);
+        self._hud.draw(surface);
         self._taz.draw(surface);
-
-    def update(self, dt):
-        self._taz.update(dt);
-
-
-    ############################################################################
-    ## Object Callbacks                                                       ##
-    ############################################################################
