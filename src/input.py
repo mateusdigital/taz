@@ -1,10 +1,9 @@
-#!/usr/bin/python
 # coding=utf8
 ##----------------------------------------------------------------------------##
 ##               █      █                                                     ##
 ##               ████████                                                     ##
 ##             ██        ██                                                   ##
-##            ███  █  █  ███        main.py                                   ##
+##            ███  █  █  ███        input.py                                  ##
 ##            █ █        █ █        Game_RamIt                                ##
 ##             ████████████                                                   ##
 ##           █              █       Copyright (c) 2016                        ##
@@ -43,21 +42,53 @@
 ################################################################################
 ## Imports                                                                    ##
 ################################################################################
-## Python ##
-import sys;
-## Game_RamIt ##
-import assets;
-import director;
+## Pygame ##
+import pygame;
 
 
-################################################################################
-## Script initialization                                                      ##
-################################################################################
-if __name__ == '__main__':
-    if(len(sys.argv) > 1):
-        assets.set_search_path(sys.argv[1]);
+############################################################################
+## Global vars                                                            ##
+############################################################################
+_prev_keys = None;
+_curr_keys = None;
 
-    director.init();
-    director.run ();
-    director.quit();
 
+############################################################################
+## Init                                                                   ##
+############################################################################
+def init():
+    global _prev_keys;
+    global _curr_keys;
+
+    _prev_keys = pygame.key.get_pressed();
+    _curr_keys = pygame.key.get_pressed();
+
+
+############################################################################
+## Update                                                                 ##
+############################################################################
+def update():
+    global _prev_keys;
+    global _curr_keys;
+
+    _prev_keys = _curr_keys;
+    _curr_keys = pygame.key.get_pressed();
+
+
+############################################################################
+## Key Methods                                                            ##
+############################################################################
+def is_down(key):
+    return _curr_keys[key];
+
+def is_up(key):
+    return not is_down(key);
+
+def was_down(key):
+    return _prev_keys[key] and is_up(key);
+
+def was_up(key):
+    return (not _prev_keys[key] and is_down(key));
+
+def is_click(key):
+    return is_down(key) and was_up(key);

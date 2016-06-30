@@ -5,7 +5,7 @@
 ##               ████████                                                     ##
 ##             ██        ██                                                   ##
 ##            ███  █  █  ███                                                  ##
-##            █ █        █ █        food.py                                   ##
+##            █ █        █ █        game.py                                   ##
 ##             ████████████         Game Taz                                  ##
 ##           █              █       Copyright (c) 2015 AmazingCow             ##
 ##          █     █    █     █      www.AmazingCow.com                        ##
@@ -41,85 +41,129 @@
 ##                                  Enjoy :)                                  ##
 ##----------------------------------------------------------------------------##
 
-## Imports ##
-#Pygame
+################################################################################
+## Imports                                                                    ##
+################################################################################
+## Python ##
+import random;
+## Pygame ##
 import pygame;
-#Project
-from clock                import BasicClock;
-from game_field_constants import GameFieldConstants;
-from resources            import Sprites;
-from scene                import Sprite;
-from movable_object       import MovableObject;
+import pygame.locals;
+## Game_Taz ##
+import sound;
+import assets;
+from constants     import *;
+from splash_scene  import *;
+from menu_scene    import *;
+from credits_scene import *;
+
+
+class _Globals:
+    surface       = None;
+    current_scene = None
+    running       = False;
 
 
 ################################################################################
-## Food                                                                       ##
+## Init / Run / Clean                                                         ##
 ################################################################################
-class Food(MovableObject):
-    ############################################################################
-    ## CONSTANTS                                                              ##
-    ############################################################################
-    STATE_DEATH        = 1000;
-    TIME_TO_KEEP_DEATH = 2000;
+def init():
+    ## Pre inits
+    sound.pre_init ();
+    assets.pre_init();
 
-    ############################################################################
-    ## CTOR                                                                   ##
-    ############################################################################
-    def __init__(self, track_index, direction, speed_factor,
-                 out_of_field_callback,
-                 collision_callback,
-                 death_callback):
+    pygame.init();
 
-        #Call baseclass CTOR.
-        MovableObject.__init__(self, track_index, direction, speed_factor,
-                               out_of_field_callback,
-                               collision_callback);
+    ## Init the Window.
+    _Globals.surface = pygame.display.set_mode(GAME_WIN_SIZE);
+    pygame.display.set_caption(GAME_WIN_CAPTION);
 
-        ## iVars ##
-        self.__death_callback = death_callback;
+    ## Init Input
+    input.init();
 
-        #Load the Sprites.
-        self.load_image(Sprites.Game_FoodFrame0);
+    ## Change the scene.
+    go_to_splash();
 
-        #Initialize the Eat timer;
-        self.__eat_timer = BasicClock(Food.TIME_TO_KEEP_DEATH);
-        self.__eat_timer.set_callback(self.__on_eat_timer_tick);
+    _Globals.running = True;
 
 
-    ############################################################################
-    ## Timer Callbacks                                                        ##
-    ############################################################################
-    def __on_eat_timer_tick(self):
-        self.__change_state_to_dead();
+def run():
+    frame_start = pygame.time.get_ticks();
+    frame_time  = 0;
+
+    while(_Globals.running):
+        frame_start = pygame.time.get_ticks();
+
+        ## Handle window events...
+        for event in pygame.event.get():
+            if(event.type == pygame.locals.QUIT):
+                _Globals.running = False;
 
 
-    ############################################################################
-    ## Override State Methods                                                 ##
-    ############################################################################
-    def _change_state_to_collided(self):
-        self.load_image(Sprites.Game_FoodFrame1);
-        self.__eat_timer.start();
+        ## Updates
+        input.update();
+        _update(GAME_FRAME_SEC);
 
-    def _change_state_to_out_of_field(self):
-        pass;
+        ## Keep the framerate tidy...
+        frame_time = (pygame.time.get_ticks() - frame_start);
+        if(frame_time < GAME_FRAME_MS):
+            while(1):
+                frame_time = (pygame.time.get_ticks() - frame_start);
+                if(frame_time >= GAME_FRAME_MS):
+                    break;
+        else:
+            print "MISS FRAME";
 
-    def __change_state_to_dead(self):
-        self._state = Food.STATE_DEATH;
-        self.__eat_timer.stop();
-        self.__death_callback(self);
+        ## Game Draw
+        _draw();
 
 
-    ############################################################################
-    ## Update                                                                 ##
-    ############################################################################
-    def update(self, dt):
-        #Update the timer (if Food isn't ate, this timer won't do nothing.)
-        self.__eat_timer.update(dt);
-
-        #Call the base class function to keep the movement
-        #only if food isn't ate.
-        if(self._state == MovableObject.STATE_NORMAL):
-            MovableObject.update(self, dt);
+def quit():
+    pygame.quit();
 
 
 
+################################################################################
+## Utilities                                                                  ##
+################################################################################
+def set_clear_color(color):
+    pass;
+
+def randint(min, max):
+    return random.randint(min, max);
+
+
+
+################################################################################
+## Scene Management                                                           ##
+################################################################################
+def go_to_splash():
+    _Globals.current_scene = MenuScene();
+def go_to_menu():
+    _Globals.current_scene = MenuScene();
+def go_to_credits():
+    _Globals.current_scene = CreditsScene();
+def go_to_game():
+    _Globals.current_scene = SplashScene();
+
+
+
+################################################################################
+## Update / Draw / Handle Events                                              ##
+################################################################################
+def _update(dt):
+    _Globals.current_scene.update(dt);
+
+
+def _draw():
+    _Globals.surface.fill(COLOR_WHITE);  #Clear.
+    _Globals.current_scene.draw(_Globals.surface); #Blit.
+    pygame.display.update();                       #Present.
+
+
+def _handle_events():
+    for event in pygame.event.get():
+        #If user wants to quit, just quit.
+        if(event.type == pygame.locals.QUIT):
+            _Globals.running = False;
+            return;

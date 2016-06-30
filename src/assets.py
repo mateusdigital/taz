@@ -1,10 +1,9 @@
-#!/usr/bin/python
 # coding=utf8
 ##----------------------------------------------------------------------------##
 ##               █      █                                                     ##
 ##               ████████                                                     ##
 ##             ██        ██                                                   ##
-##            ███  █  █  ███        main.py                                   ##
+##            ███  █  █  ███        assets.py                                 ##
 ##            █ █        █ █        Game_RamIt                                ##
 ##             ████████████                                                   ##
 ##           █              █       Copyright (c) 2016                        ##
@@ -44,20 +43,66 @@
 ## Imports                                                                    ##
 ################################################################################
 ## Python ##
-import sys;
-## Game_RamIt ##
-import assets;
-import director;
+import os.path;
+## Pygame ##
+import pygame;
 
 
 ################################################################################
-## Script initialization                                                      ##
+## Global vars                                                                ##
 ################################################################################
-if __name__ == '__main__':
-    if(len(sys.argv) > 1):
-        assets.set_search_path(sys.argv[1]);
+_paths              = ["./assets", "/usr/local/share/amazingcow_game_ramit/assets"];
+_assets_search_path = None;
 
-    director.init();
-    director.run ();
-    director.quit();
 
+
+################################################################################
+## Init                                                                       ##
+################################################################################
+def pre_init():
+    global _paths;
+    global _assets_search_path;
+
+    ## Was explicit set.
+    if(_assets_search_path is not None):
+        _paths.insert(0, _assets_search_path);
+
+    for path in _paths:
+        fullpath = os.path.abspath(os.path.expanduser(os.path.join(path)));
+        if(os.path.isdir(fullpath)):
+            _assets_search_path = fullpath;
+            return;
+
+    print "Error - Cannot find the assets folder, aborting...";
+    exit(1);
+
+
+################################################################################
+## Search Path Functions                                                      ##
+################################################################################
+def set_search_path(path):
+    global _assets_search_path;
+    _assets_search_path = path;
+
+def get_search_path():
+    return _assets_search_path;
+
+def build_path(filename):
+    return os.path.join(get_search_path(), filename);
+
+
+################################################################################
+## Image Functions                                                            ##
+################################################################################
+def load_image_no_convert(name):
+    return pygame.image.load(build_path(name));
+
+def load_image(name):
+    return load_image_no_convert(name).convert_alpha();
+
+
+################################################################################
+## Font Functions                                                             ##
+################################################################################
+def load_font(name, size):
+    return pygame.font.Font(build_path(name), size);

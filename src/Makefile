@@ -1,2 +1,0 @@
-build:
-	python main.py

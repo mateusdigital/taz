@@ -169,5 +169,6 @@ class MovableObject(Sprite):
         #Object is inside of field, keep moving.
         else:
             speed = MovableObject.HORIZONTAL_SPEED * self.__direction * self.__speed_factor;
+            print "SPEEEEED: ", speed * (dt / 1000.0);
             self.move_x(speed * (dt / 1000.0));
 

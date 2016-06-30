@@ -1,10 +1,9 @@
-#!/usr/bin/python
 # coding=utf8
 ##----------------------------------------------------------------------------##
 ##               █      █                                                     ##
 ##               ████████                                                     ##
 ##             ██        ██                                                   ##
-##            ███  █  █  ███        main.py                                   ##
+##            ███  █  █  ███        text.py                                   ##
 ##            █ █        █ █        Game_RamIt                                ##
 ##             ████████████                                                   ##
 ##           █              █       Copyright (c) 2016                        ##
@@ -43,21 +42,85 @@
 ################################################################################
 ## Imports                                                                    ##
 ################################################################################
-## Python ##
-import sys;
+## Pygame ##
+import pygame;
 ## Game_RamIt ##
 import assets;
-import director;
+from constants import *;
+from cowclock  import *;
 
 
-################################################################################
-## Script initialization                                                      ##
-################################################################################
-if __name__ == '__main__':
-    if(len(sys.argv) > 1):
-        assets.set_search_path(sys.argv[1]);
+class Text:
+    ############################################################################
+    ## Init                                                                   ##
+    ############################################################################
+    def __init__(self,
+                 font_name,
+                 font_size,
+                 x, y,
+                 contents = "",
+                 color    = COLOR_WHITE):
+        ## Font
+        self.font = assets.load_font(font_name, font_size);
 
-    director.init();
-    director.run ();
-    director.quit();
+        ## Contents
+        self.contents = contents;
+
+        ## Position
+        self.x = x;
+        self.y = y;
+
+        ## Color
+        self.color = color;
+
+        ## Blink timer
+        self.visible     = True;
+        self.blink_timer = CowClock(0.2, CowClock.REPEAT_FOREVER,
+                                    self._on_blink_timer_tick);
+
+
+    ############################################################################
+    ## Public Methods                                                         ##
+    ############################################################################
+    def set_position(self, x, y):
+        self.x = x;
+        self.y = y;
+
+    def set_contents(self, contents):
+        self.contents = contents;
+
+    def set_blinking(self, blink):
+        if(blink):
+            self.blink_timer.start();
+            self._on_blink_timer_tick();
+        else:
+            self.blink_timer.stop();
+            self.visible = True;
+
+    def get_size(self, contents = None):
+        if(contents == None):
+            contents = self.contents;
+
+        return self.font.size(contents);
+
+
+    ############################################################################
+    ## Update / Draw                                                          ##
+    ############################################################################
+    def update(self, dt):
+        self.blink_timer.update(dt);
+
+
+    def draw(self, surface, antialias = False):
+        if(self.visible):
+            text_surface = self.font.render(self.contents, antialias, self.color);
+            surface.blit(text_surface, (self.x, self.y));
+
+
+
+    ############################################################################
+    ## Private Methods                                                        ##
+    ############################################################################
+    def _on_blink_timer_tick(self):
+        self.visible = not self.visible;
 

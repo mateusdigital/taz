@@ -41,62 +41,106 @@
 ##                                  Enjoy :)                                  ##
 ##----------------------------------------------------------------------------##
 
-class BasicClock(object):
+################################################################################
+## Imports                                                                    ##
+################################################################################
+## Python ##
+import sys;
+
+
+class CowClock(object):
+    REPEAT_FOREVER = sys.maxint; ##COWHACK: Should be ok, but verify...
+
+
     ############################################################################
     ## CTOR                                                                   ##
     ############################################################################
-    def __init__(self, time, tick_callback = None):
-        self.__tick_time            = time;
-        self.__time_since_last_tick = None;
-        self.__enabled              = False;
-        self.__tick_callback        = tick_callback;
+    def __init__(self,
+                 time,
+                 repeat_count,
+                 tick_callback = None,
+                 done_callback = None):
+
+        self._tick_time    = time;
+        self._repeat_count = repeat_count;
+
+        self._tick_count           = 0;
+        self._enabled              = False;
+        self._time_since_last_tick = 0;
+
+        self._tick_callback = tick_callback;
+        self._done_callback = done_callback;
+
 
     ############################################################################
     ## Set/Get Time                                                           ##
     ############################################################################
     def set_time(self, time):
-        self.__time_since_last_tick = 0;
-        self.__tick_time            = time;
+        self._time_since_last_tick = 0;
+        self._tick_time            = time;
 
     def get_time(self):
-        return self.__tick_time;
+        return self._tick_time;
+
+
+    def set_repeat_count(self, count):
+        self._repeat_count = count;
+
+    def get_repeat_count(self):
+        return self._repeat_count;
+
+    def get_tick_count(self):
+        return self._tick_count;
+
 
     ############################################################################
     ## Start/Stop/Enabled                                                     ##
     ############################################################################
     def start(self):
-        self.__enabled              = True;
-        self.__time_since_last_tick = 0;
+        self._enabled              = True;
+        self._tick_count           = 0;
+        self._time_since_last_tick = 0;
 
     def stop(self):
-        self.__enabled = False;
+        self._enabled = False;
 
     def is_enabled(self):
-        return self.__enabled;
+        return self._enabled;
+
 
     ############################################################################
     ## Set/Get Callback                                                       ##
     ############################################################################
-    def set_callback(self, callback):
-        self.__tick_callback = callback;
+    def set_tick_callback(self, callback):
+        self._tick_callback = callback;
 
-    def get_callback(self):
-        return self.__tick_callback;
+    def set_done_callback(self, callback):
+        self._done_callback = callback;
+
 
     ############################################################################
     ## Update                                                                 ##
     ############################################################################
     def update(self, dt):
-        if(not self.__enabled):
+        if(not self._enabled):
             return;
 
         #Update the timer...
-        self.__time_since_last_tick += dt;
-        if(self.__time_since_last_tick >= self.__tick_time):
-            self.__time_since_last_tick -= self.__tick_time;
+        self._time_since_last_tick += dt;
+        if(self._time_since_last_tick >= self._tick_time):
+            self._time_since_last_tick -= self._tick_time;
 
-            #We have a valid callback?
-            assert self.__tick_callback is not None;
-            self.__tick_callback();
+            #Has tick callback?
+            if(self._tick_callback is not None):
+                self._tick_callback();
+
+            self._tick_count += 1;
+
+            #Did finish?
+            if(self._tick_count >= self._repeat_count):
+                self._enabled = False;
+
+                if(self._done_callback is not None):
+                    self._done_callback();
 
 

@@ -1,10 +1,9 @@
-#!/usr/bin/python
 # coding=utf8
 ##----------------------------------------------------------------------------##
 ##               █      █                                                     ##
 ##               ████████                                                     ##
 ##             ██        ██                                                   ##
-##            ███  █  █  ███        main.py                                   ##
+##            ███  █  █  ███        color_surface.py                          ##
 ##            █ █        █ █        Game_RamIt                                ##
 ##             ████████████                                                   ##
 ##           █              █       Copyright (c) 2016                        ##
@@ -43,21 +42,12 @@
 ################################################################################
 ## Imports                                                                    ##
 ################################################################################
-## Python ##
-import sys;
-## Game_RamIt ##
-import assets;
-import director;
+## Pygame ##
+import pygame;
 
 
-################################################################################
-## Script initialization                                                      ##
-################################################################################
-if __name__ == '__main__':
-    if(len(sys.argv) > 1):
-        assets.set_search_path(sys.argv[1]);
-
-    director.init();
-    director.run ();
-    director.quit();
-
+def color_surface(surface, red, green, blue):
+    arr        = pygame.surfarray.pixels3d(surface)
+    arr[:,:,0] = red
+    arr[:,:,1] = green
+    arr[:,:,2] = blue

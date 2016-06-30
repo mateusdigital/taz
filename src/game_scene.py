@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #coding=utf8
 ##----------------------------------------------------------------------------##
 ##               █      █                                                     ##
@@ -40,6 +39,7 @@
 ##                                                                            ##
 ##                                  Enjoy :)                                  ##
 ##----------------------------------------------------------------------------##
+
 ## Imports ##
 #Python
 import pdb; # :~)
@@ -47,10 +47,8 @@ import random;
 #Pygame
 import pygame;
 #Project
-from   clock                import BasicClock;
 from   game                 import Constants;
 from   game                 import Director;
-from   game_field_constants import GameFieldConstants;
 from   movable_object       import MovableObject;
 from   food                 import Food;
 from   bomb                 import Bomb;
@@ -59,7 +57,7 @@ from   resources            import Fonts;
 from   scene                import Scene;
 from   scene                import Sprite;
 from   taz                  import Taz;
-import menu_scene; #To avoid circular imports;
+
 
 ##COWTODO: THIS FILE IS TOO BIG AND TOO MESSY.
 class GameScene(Scene):
@@ -264,7 +262,7 @@ class GameScene(Scene):
         surface = self.__score_font.render(score,
                                      False,
                                      (a,a, a));
-                                     #(187, 187, 53));                                    
+                                     #(187, 187, 53));
 
         self.__score_sprite.update_image(surface);
         self.__score_sprite.set_position(325, 339);
