@@ -9,8 +9,8 @@ GAME_FRAME_SEC = 1.0    / GAME_FPS;
 ################################################################################
 ## Game Window                                                                ##
 ################################################################################
-GAME_WIN_WIDTH    = 800;
-GAME_WIN_HEIGHT   = 600;
+GAME_WIN_WIDTH    = 600;
+GAME_WIN_HEIGHT   = int(GAME_WIN_WIDTH / 1.3333333);
 GAME_WIN_CENTER_X = GAME_WIN_WIDTH  * 0.5;
 GAME_WIN_CENTER_Y = GAME_WIN_HEIGHT * 0.5;
 GAME_WIN_SIZE     = (GAME_WIN_WIDTH, GAME_WIN_HEIGHT);
@@ -29,6 +29,8 @@ PLAYFIELD_SIZE   = (PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT);
 ## Fonts                                                                      ##
 ################################################################################
 FONT_NAME = "nokiafc22.ttf";
+FONT_MENU_SIZE      = 35;
+FONT_MENU_LOGO_SIZE = 18;
 FONT_SIZE = 20;
 
 ################################################################################
