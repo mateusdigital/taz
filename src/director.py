@@ -56,10 +56,11 @@ from constants     import *;
 from splash_scene  import *;
 from menu_scene    import *;
 from credits_scene import *;
-
+from game_scene    import *;
 
 class _Globals:
     surface       = None;
+    clear_color   = COLOR_WHITE;
     current_scene = None
     running       = False;
 
@@ -126,8 +127,11 @@ def quit():
 ################################################################################
 ## Utilities                                                                  ##
 ################################################################################
+def get_draw_surface():
+    return _Globals.surface;
+
 def set_clear_color(color):
-    pass;
+    _Globals.clear_color = color;
 
 def randint(min, max):
     return random.randint(min, max);
@@ -144,7 +148,7 @@ def go_to_menu():
 def go_to_credits():
     _Globals.current_scene = CreditsScene();
 def go_to_game():
-    _Globals.current_scene = SplashScene();
+    _Globals.current_scene = GameScene();
 
 
 
@@ -156,7 +160,7 @@ def _update(dt):
 
 
 def _draw():
-    _Globals.surface.fill(COLOR_WHITE);  #Clear.
+    _Globals.surface.fill(_Globals.clear_color);   #Clear.
     _Globals.current_scene.draw(_Globals.surface); #Blit.
     pygame.display.update();                       #Present.
 
