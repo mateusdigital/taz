@@ -63,13 +63,14 @@ class Taz():
     STATE_ALIVE = 0;
     STATE_DYING = 1;
     STATE_DEAD  = 2;
+    MAX_LIVES   = 3;
 
     ## Private ##
-    _MAX_LIVES             = 3;
     _FRAMES_COUNT          = 2;
     _TRACKS_COUNT          = 8;
     _ANIMATION_INVERVAL    = 0.15;
     _CHANGE_TRACK_INTERVAL = 0.15; #COWTODO: TWEAK
+    _DEATH_INTERVAL        = 1.00; #COWTODO: TWEAK
     _TRACK_OFFSET          = 32;
     _SPEED                 = 300; #COWTODO: TWEAK
 
@@ -77,15 +78,18 @@ class Taz():
     ############################################################################
     ## Init                                                                   ##
     ############################################################################
-    def __init__(self, min_bounds, max_bounds):
+    def __init__(self, min_bounds, max_bounds, is_playable):
         ## Housekeeping
-        self._state                    = Taz.STATE_ALIVE;
-        self._lives                    = Taz._MAX_LIVES;
-        self._eat_count                = 0;
+        self._state       = Taz.STATE_ALIVE;
+        self._lives       = Taz.MAX_LIVES;
+        self._eat_count   = 0;
+        self._is_playable = is_playable;
 
         ## Frames / Animation
         self._frames           = [];
         self._animation_timer  = None;
+        self._death_timer      = None;
+        self._frame_size       = None;
 
         ## Movement / Bounds
         self._curr_track_index   = 0;
@@ -105,6 +109,9 @@ class Taz():
     ############################################################################
     ## Eat
     def make_eat(self):
+        if(self._state != Taz.STATE_ALIVE):
+            return;
+
         self._eat_count += 1;
 
     def get_eat_count(self):
@@ -112,7 +119,11 @@ class Taz():
 
     ## Lives
     def kill(self):
-        pass;
+        if(self._state != Taz.STATE_ALIVE):
+            return;
+
+        self._state = Taz.STATE_DYING;
+        self._death_timer.start();
 
     def get_lives(self):
         return self._lives;
@@ -121,6 +132,12 @@ class Taz():
     def get_state(self):
         return self._state;
 
+    ## Position / Size
+    def set_position(self, x, y):
+        self._position = [x, y];
+
+    def get_size(self):
+        return self._frame_size;
 
     ############################################################################
     ## Update / Draw                                                          ##
@@ -129,7 +146,12 @@ class Taz():
         ## Timers
         self._animation_timer.update   (dt);
         self._track_change_timer.update(dt);
-        print not self._track_change_timer.is_enabled();
+        self._death_timer.update       (dt);
+
+        ## There's anything to do if Taz is dying or dead
+        ## (or if it is not playable)...
+        if(self._state != Taz.STATE_ALIVE or not self._is_playable):
+            return;
 
         ## Movement
         ## Vertical - Track Based
@@ -160,9 +182,23 @@ class Taz():
                             self._min_bounds[1];
 
 
+
     def draw(self, surface):
-        index = self._animation_timer.get_tick_count() % Taz._FRAMES_COUNT;
-        surface.blit(self._frames[index], self._position);
+        ## Do not draw Taz when he's dead.
+        if(self._state == Taz.STATE_DEAD):
+            return;
+
+        index       = self._animation_timer.get_tick_count() % Taz._FRAMES_COUNT;
+        taz_surface = self._frames[index];
+
+        ## When is dying draw Taz scaled horizontally.
+        if(self._state == Taz.STATE_DYING):
+            taz_surface = pygame.transform.scale(
+                                taz_surface,
+                                (self._frame_size[0] * 2, self._frame_size[1])
+                          );
+
+        surface.blit(taz_surface, self._position);
 
 
     ############################################################################
@@ -173,9 +209,9 @@ class Taz():
         for i in xrange(0, Taz._FRAMES_COUNT):
             self._frames.append(assets.load_image("TazFrame%d.png" %(i)));
 
-        frame_size = self._frames[0].get_size();
-        self._max_bounds[0] -= frame_size[0];
-        self._max_bounds[1] -= frame_size[1];
+        self._frame_size     = self._frames[0].get_size();
+        self._max_bounds[0] -= self._frame_size[0];
+        self._max_bounds[1] -= self._frame_size[1];
 
 
     def _init_timers(self):
@@ -193,6 +229,13 @@ class Taz():
                                         repeat_count = 1
                                    );
 
+        ## Death
+        self._death_timer = CowClock(
+                                time          = Taz._DEATH_INTERVAL,
+                                repeat_count  = 1,
+                                done_callback = self._on_death_timer_done
+                            );
+
 
     ## Movement
     def _change_track_is_ok(self):
@@ -202,3 +245,9 @@ class Taz():
             self._track_change_timer.start();
 
         return is_ok;
+
+
+    ## Timer Callbacks
+    def _on_death_timer_done(self):
+        self._state = Taz.STATE_DEAD;
+        self._lives -= 1;
