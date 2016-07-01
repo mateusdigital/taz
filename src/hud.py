@@ -65,6 +65,7 @@ class Hud:
 
 
         ## Lives
+        self._current_lives = Taz.MAX_LIVES;
         self._lives = [];
         for i in xrange(0, Taz.MAX_LIVES):
             taz = Taz(
@@ -88,8 +89,13 @@ class Hud:
     def set_score(self, score):
         self._score_text.set_contents("Score: %05d" %(score));
 
-    def set_lives(self, lives):
-        pass;
+    def add_live(self):
+        self._lives[self._current_lives].set_state(Taz.STATE_ALIVE);
+        self._current_lives += 1;
+
+    def remove_live(self):
+        self._current_lives -= 1;
+        self._lives[self._current_lives].set_state(Taz.STATE_DEAD);
 
 
     ############################################################################
