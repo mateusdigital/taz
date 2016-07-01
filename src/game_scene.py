@@ -92,7 +92,8 @@ class GameScene():
         self._taz = Taz(
             min_bounds  = game_field_min,
             max_bounds  = game_field_max,
-            is_playable = True
+            is_playable = True,
+            dead_animation_callback = self._on_taz_dead_animation_done
         );
 
         ## Enemies
@@ -130,12 +131,6 @@ class GameScene():
         #COWTODO: Implement...
 
 
-        ## Check Game State.
-        if(self._taz.get_lives() == 0):
-            self._game_state = GameScene._STATE_GAME_OVER;
-            return;
-
-
     def _update_paused(self, dt):
         ## Input
         if(input.is_click(pygame.locals.K_p)):
@@ -155,3 +150,19 @@ class GameScene():
         surface.blit(self._game_field, self._game_field_pos);
         self._hud.draw(surface);
         self._taz.draw(surface);
+
+
+    ############################################################################
+    ## Private Methods                                                        ##
+    ############################################################################
+    def _on_taz_dead_animation_done(self):
+        self._hud.remove_live();
+
+        ## Check Game State.
+        if(self._taz.get_lives() == 0):
+            self._game_state = GameScene._STATE_GAME_OVER;
+            return;
+
+        #COWTODO: Restart the enemies...
+        self._taz.reset();
+
