@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #coding=utf8
 ##----------------------------------------------------------------------------##
 ##               █      █                                                     ##
@@ -78,7 +77,10 @@ class Taz():
     ############################################################################
     ## Init                                                                   ##
     ############################################################################
-    def __init__(self, min_bounds, max_bounds, is_playable):
+    def __init__(self,
+                 min_bounds, max_bounds,
+                 is_playable,
+                 dead_animation_callback = None):
         ## Housekeeping
         self._state       = Taz.STATE_ALIVE;
         self._lives       = Taz.MAX_LIVES;
@@ -86,10 +88,11 @@ class Taz():
         self._is_playable = is_playable;
 
         ## Frames / Animation
-        self._frames           = [];
-        self._animation_timer  = None;
-        self._death_timer      = None;
-        self._frame_size       = None;
+        self._frames                  = [];
+        self._animation_timer         = None;
+        self._death_timer             = None;
+        self._frame_size              = None;
+        self._dead_animation_callback = dead_animation_callback;
 
         ## Movement / Bounds
         self._curr_track_index   = 0;
@@ -117,7 +120,8 @@ class Taz():
     def get_eat_count(self):
         return self._eat_count;
 
-    ## Lives
+
+    ## Actions
     def kill(self):
         if(self._state != Taz.STATE_ALIVE):
             return;
@@ -125,12 +129,22 @@ class Taz():
         self._state = Taz.STATE_DYING;
         self._death_timer.start();
 
+    def reset(self):
+        self._state = Taz.STATE_ALIVE;
+
+
+    ## Lives
     def get_lives(self):
         return self._lives;
 
+
     ## State
+    def set_state(self, state):
+        self._state = state;
+
     def get_state(self):
         return self._state;
+
 
     ## Position / Size
     def set_position(self, x, y):
@@ -138,6 +152,7 @@ class Taz():
 
     def get_size(self):
         return self._frame_size;
+
 
     ############################################################################
     ## Update / Draw                                                          ##
@@ -251,3 +266,5 @@ class Taz():
     def _on_death_timer_done(self):
         self._state = Taz.STATE_DEAD;
         self._lives -= 1;
+
+        self._dead_animation_callback();
