@@ -51,7 +51,7 @@ import pygame;
 ################################################################################
 ## Global vars                                                                ##
 ################################################################################
-_paths              = ["./assets", "/usr/local/share/amazingcow_game_ramit/assets"];
+_paths              = ["./assets", "/usr/local/share/amazingcow_game_taz/assets"];
 _assets_search_path = None;
 
 
