@@ -141,7 +141,7 @@ class MenuScene:
             return;
 
         if(play_sound):
-            sound.play_frequency(440, 1);
+            sound.play_eat();
 
         self._curr_selection = new_selection;
         self._play_text.set_blinking   (self._curr_selection == 0);
