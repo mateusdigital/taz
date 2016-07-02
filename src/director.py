@@ -147,7 +147,7 @@ def randfloat(min, max):
 ## Scene Management                                                           ##
 ################################################################################
 def go_to_splash():
-    _Globals.current_scene = MenuScene();
+    _Globals.current_scene = SplashScene();
 def go_to_menu():
     _Globals.current_scene = MenuScene();
 def go_to_credits():
