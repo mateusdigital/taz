@@ -1,3 +1,6 @@
-#Ignore the Assets and Resources folders while developing
-#so it will not clutter the git.
-assets/
+*.pyc
+*.spec
+archives/
+bin/
+build/
+dist/
