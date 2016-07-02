@@ -169,6 +169,8 @@ class GameScene():
 
             ## Collided
             if(not enemy.is_fatal()):
+                sound.play_eat();
+
                 self._taz.make_eat();
                 eat_count = self._taz.get_eat_count();
                 self._hud.set_score(
@@ -181,6 +183,7 @@ class GameScene():
                     Enemy.Accelerate(GameScene._SPEED_ACCELERATION);
 
             else:
+                sound.play_bomb();
                 self._taz.kill();
 
 
