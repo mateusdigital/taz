@@ -132,9 +132,15 @@ def get_draw_surface():
 def set_clear_color(color):
     _Globals.clear_color = color;
 
+
 def randint(min, max):
     return random.randint(min, max);
 
+def randbool():
+    return bool(random.getrandbits(1));
+
+def randfloat(min, max):
+    return random.uniform(min, max);
 
 
 ################################################################################
