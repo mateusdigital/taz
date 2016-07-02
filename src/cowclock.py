@@ -56,7 +56,7 @@ class CowClock(object):
     ############################################################################
     def __init__(self,
                  time,
-                 repeat_count,
+                 repeat_count  = 1,
                  tick_callback = None,
                  done_callback = None):
 
