@@ -50,12 +50,13 @@ GAME_FRAME_SEC = 1.0    / GAME_FPS;
 ################################################################################
 ## Game Window                                                                ##
 ################################################################################
-GAME_WIN_WIDTH    = 600;
-GAME_WIN_HEIGHT   = int(GAME_WIN_WIDTH / 1.3333333);
-GAME_WIN_CENTER_X = GAME_WIN_WIDTH  * 0.5;
-GAME_WIN_CENTER_Y = GAME_WIN_HEIGHT * 0.5;
-GAME_WIN_SIZE     = (GAME_WIN_WIDTH, GAME_WIN_HEIGHT);
-GAME_WIN_CAPTION  = "Taz - v0.1 - AmazingCow";
+GAME_WIN_WIDTH         = 600;
+GAME_WIN_HEIGHT        = int(GAME_WIN_WIDTH / 1.3333333);
+GAME_WIN_CENTER_X      = GAME_WIN_WIDTH  * 0.5;
+GAME_WIN_CENTER_Y      = GAME_WIN_HEIGHT * 0.5;
+GAME_WIN_SIZE          = (GAME_WIN_WIDTH, GAME_WIN_HEIGHT);
+GAME_WIN_CAPTION       = "AmazingCow - Taz - v0.0.0";
+GAME_WIN_CAPTION_SHORT = "Taz";
 
 
 ################################################################################
