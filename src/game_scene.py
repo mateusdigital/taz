@@ -1,17 +1,16 @@
-#coding=utf8
+# coding=utf8
 ##----------------------------------------------------------------------------##
 ##               █      █                                                     ##
 ##               ████████                                                     ##
 ##             ██        ██                                                   ##
-##            ███  █  █  ███                                                  ##
-##            █ █        █ █        game_scene.py                             ##
-##             ████████████         Game Taz                                  ##
-##           █              █       Copyright (c) 2015 AmazingCow             ##
-##          █     █    █     █      www.AmazingCow.com                        ##
+##            ███  █  █  ███        game_scene.py                             ##
+##            █ █        █ █        Game_Taz                                  ##
+##             ████████████                                                   ##
+##           █              █       Copyright (c) 2015, 2016                  ##
+##          █     █    █     █      AmazingCow - www.AmazingCow.com           ##
 ##          █     █    █     █                                                ##
 ##           █              █       N2OMatt - n2omatt@amazingcow.com          ##
 ##             ████████████         www.amazingcow.com/n2omatt                ##
-##                                                                            ##
 ##                                                                            ##
 ##                  This software is licensed as GPLv3                        ##
 ##                 CHECK THE COPYING FILE TO MORE DETAILS                     ##
@@ -28,9 +27,9 @@
 ##        (See opensource.AmazingCow.com/acknowledgment.html for details).    ##
 ##        If you will not acknowledge, just send us a email. We'll be         ##
 ##        *VERY* happy to see our work being used by other people. :)         ##
-##        The email is: acknowledgmentopensource@AmazingCow.com               ##
+##        The email is: acknowledgment_opensource@AmazingCow.com              ##
 ##     3. Altered source versions must be plainly marked as such,             ##
-##        and must notbe misrepresented as being the original software.       ##
+##        and must not be misrepresented as being the original software.      ##
 ##     4. This notice may not be removed or altered from any source           ##
 ##        distribution.                                                       ##
 ##     5. Most important, you must have fun. ;)                               ##
