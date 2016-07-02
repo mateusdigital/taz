@@ -64,8 +64,8 @@ class CreditsScene:
 
         ## Logo
         self.logo     = assets.load_image("AmazingCow_Logo_Small.png");
-        self.logo_pos = ((GAME_WIN_WIDTH * 0.5) - (self.logo.get_width() * 0.5),
-                         20);
+        logo_size     = self.logo.get_size();
+        self.logo_pos = ((GAME_WIN_WIDTH * 0.5) - (logo_size[0] * 0.5), 15);
 
         color_surface(
             self.logo,
@@ -92,20 +92,20 @@ class CreditsScene:
             "opensource.amazingcow.com",
             "",
             "Dev / Graphics / Sound by N2OMatt",
-            "","",
+            "",
             "THANKS FOR PLAYING..."
-            "", "", "",
+            "", "",
             "APAE do a wonderful job helping exceptional people",
             "Why you don't look and help their work? <3",
             "www.apaebrasil.org.br"
         ];
 
         self.texts   = [];
-        start_offset = 140;
-        line_offset  =  20;
+        start_offset = self.logo_pos[1] + logo_size[1] + 5;
+        line_offset  =  16;
 
         for i in xrange(0, len(msg)):
-            text = Text("SourceCodePro-Regular.ttf", 20,
+            text = Text("SourceCodePro-Regular.ttf", line_offset,
                         -1, -1,
                         msg[i], COLOR_BLACK);
             text_size = text.get_size();
