@@ -33,7 +33,6 @@ class Enemy:
     @staticmethod
     def LoadAssets():
         if(Enemy._SURFACES is None):
-            print "LOADING ENEMY SURFACE"
             Enemy._SURFACES = [
                 assets.load_image("Food.png"  ),
                 assets.load_image("Caught.png"),
@@ -70,6 +69,7 @@ class Enemy:
 
         ## Surface
         self._surface = None;
+        self._visible = False;
 
         ## Movement / Bounds
         self._position     = [0, 0];
@@ -81,7 +81,7 @@ class Enemy:
         self._track_index  = track_index;
 
         ## Complete initialization.
-        self._init_timers();
+        self._init_timers ();
         self.reset();
 
 
@@ -91,7 +91,8 @@ class Enemy:
     ############################################################################
     def check_collision(self, other_rect):
         ## We can pass through the caught foods.
-        if(self._type == Enemy._SURFACE_TYPE_CAUGHT):
+        if(self._type == Enemy._SURFACE_TYPE_CAUGHT or \
+           self._visible == False):
             return False;
 
         this_rect = pygame.Rect(self._position, self._surface.get_size());
@@ -111,11 +112,7 @@ class Enemy:
 
 
     def reset(self):
-        self._speed = Enemy.GetNextSpeed();
-
-        self._decide_type     ();
-        self._decide_direction();
-
+        self._visible = False;
 
         ## Reset the Out of Bounds timer.
         out_time = director.randfloat(
@@ -123,12 +120,9 @@ class Enemy:
                         Enemy._OUT_OF_BOUNDS_INTERVAL_MAX
                    );
 
-        self._reset_out_of_bounds_timer = CowClock(
-            time          = out_time,
-            done_callback = self.reset
-        );
-
-        print "Now speed is:", self._speed;
+        self._reset_out_of_bounds_timer.stop();
+        self._reset_out_of_bounds_timer.set_time(out_time);
+        self._reset_out_of_bounds_timer.start();
 
 
     ############################################################################
@@ -149,14 +143,14 @@ class Enemy:
 
         ## Check Boundaries
         if(self._speed > 0 and self._position[0] > self._max_bounds[0]):
-            self._reset_out_of_bounds_timer.start();
+            self.reset();
 
         elif(self._speed < 0 and self._position[0] < self._min_bounds[0]):
-            self._reset_out_of_bounds_timer.start();
+            self.reset();
 
 
     def draw(self, surface):
-        if(self._reset_out_of_bounds_timer.is_enabled()):
+        if(not self._visible):
             return;
 
         self._surface = Enemy.GetSurface(self._type);
@@ -167,12 +161,24 @@ class Enemy:
     ## Private Methods                                                        ##
     ############################################################################
     def _init_timers(self):
+        self._reset_out_of_bounds_timer = CowClock(
+            time          = 0,
+            done_callback = self._reset_helper
+        );
+
         ## Caught
         self._reset_caught_timer = CowClock(
             time          = Enemy._CAUGHT_INTERVAL,
             done_callback = self.reset
         );
 
+    def _reset_helper(self):
+        self._speed = Enemy.GetNextSpeed();
+
+        self._decide_type     ();
+        self._decide_direction();
+
+        self._visible = True;
 
     def _decide_type(self):
         is_bomb = director.randbool();
@@ -180,6 +186,8 @@ class Enemy:
             self._type = Enemy._SURFACE_TYPE_BOMB;
         else:
             self._type = Enemy._SURFACE_TYPE_FOOD;
+
+        self._surface = Enemy.GetSurface(self._type);
 
 
     def _decide_direction(self):
