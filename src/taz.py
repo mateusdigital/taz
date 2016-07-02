@@ -65,13 +65,29 @@ class Taz():
     MAX_LIVES   = 3;
 
     ## Private ##
+    _FRAMES                = None;
     _FRAMES_COUNT          = 2;
-    _TRACKS_COUNT          = 8;
     _ANIMATION_INVERVAL    = 0.15;
-    _CHANGE_TRACK_INTERVAL = 0.15; #COWTODO: TWEAK
+    _CHANGE_TRACK_INTERVAL = 0.10; #COWTODO: TWEAK
     _DEATH_INTERVAL        = 1.00; #COWTODO: TWEAK
-    _TRACK_OFFSET          = 32;
-    _SPEED                 = 300; #COWTODO: TWEAK
+    _SPEED                 = 300;  #COWTODO: TWEAK
+
+
+    ############################################################################
+    ## Static Methods                                                         ##
+    ############################################################################
+    @staticmethod
+    def LoadAssets():
+        if(Taz._FRAMES is not None):
+            return;
+
+        Taz._FRAMES = [];
+        for i in xrange(0, Taz._FRAMES_COUNT):
+            Taz._FRAMES.append(assets.load_image("TazFrame%d.png" %(i)));
+
+    @staticmethod
+    def GetFrame(index):
+        return Taz._FRAMES[index];
 
 
     ############################################################################
@@ -79,8 +95,12 @@ class Taz():
     ############################################################################
     def __init__(self,
                  min_bounds, max_bounds,
+                 tracks_count, track_offset,
                  is_playable,
                  dead_animation_callback = None):
+        ## Pre init
+        Taz.LoadAssets();
+
         ## Housekeeping
         self._state       = Taz.STATE_ALIVE;
         self._lives       = Taz.MAX_LIVES;
@@ -88,7 +108,6 @@ class Taz():
         self._is_playable = is_playable;
 
         ## Frames / Animation
-        self._frames                  = [];
         self._animation_timer         = None;
         self._death_timer             = None;
         self._frame_size              = None;
@@ -97,9 +116,11 @@ class Taz():
         ## Movement / Bounds
         self._curr_track_index   = 0;
         self._can_change_track   = False;
-        self._position           = [min_bounds[0], min_bounds[1]];
         self._min_bounds         = min_bounds;
         self._max_bounds         = max_bounds;
+        self._tracks_count       = tracks_count;
+        self._track_offset       = track_offset;
+        self._position           = [max_bounds[0] * 0.5, min_bounds[1]];
         self._track_change_timer = None;
 
         ## Complete initialization.
@@ -153,6 +174,9 @@ class Taz():
     def get_size(self):
         return self._frame_size;
 
+    def get_hit_box(self):
+        return pygame.Rect(self._position, self._frame_size);
+
 
     ############################################################################
     ## Update / Draw                                                          ##
@@ -184,7 +208,7 @@ class Taz():
         ## Maintain the Taz into GameField
         self._curr_track_index = numpy.clip(self._curr_track_index,
                                             0,
-                                            Taz._TRACKS_COUNT -1);
+                                            self._tracks_count -1);
 
         self._position[0] = numpy.clip(self._position  [0],
                                        self._min_bounds[0],
@@ -192,9 +216,8 @@ class Taz():
 
 
         ## Update the vertical position based upon which track he is.
-        self._position[1] = self._curr_track_index * \
-                            Taz._TRACK_OFFSET      + \
-                            self._min_bounds[1];
+        self._position[1] = (self._curr_track_index * self._track_offset) \
+                            + self._min_bounds[1];
 
 
 
@@ -204,7 +227,7 @@ class Taz():
             return;
 
         index       = self._animation_timer.get_tick_count() % Taz._FRAMES_COUNT;
-        taz_surface = self._frames[index];
+        taz_surface = Taz.GetFrame(index);
 
         ## When is dying draw Taz scaled horizontally.
         if(self._state == Taz.STATE_DYING):
@@ -221,10 +244,11 @@ class Taz():
     ############################################################################
     ## Inits ##
     def _init_frames(self):
-        for i in xrange(0, Taz._FRAMES_COUNT):
-            self._frames.append(assets.load_image("TazFrame%d.png" %(i)));
+        self._frame_size = Taz.GetFrame(0).get_size();
 
-        self._frame_size     = self._frames[0].get_size();
+        ## Update the max bounds, taking off the size of the taz sprite.
+        ## this ease the calculation of taz bounds because we don't need
+        ## to subtract it's size every time.
         self._max_bounds[0] -= self._frame_size[0];
         self._max_bounds[1] -= self._frame_size[1];
 
@@ -239,15 +263,11 @@ class Taz():
         self._animation_timer.start();
 
         ## Track Change
-        self._track_change_timer = CowClock(
-                                        time         = Taz._CHANGE_TRACK_INTERVAL,
-                                        repeat_count = 1
-                                   );
+        self._track_change_timer = CowClock(Taz._CHANGE_TRACK_INTERVAL);
 
         ## Death
         self._death_timer = CowClock(
                                 time          = Taz._DEATH_INTERVAL,
-                                repeat_count  = 1,
                                 done_callback = self._on_death_timer_done
                             );
 
