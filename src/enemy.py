@@ -54,8 +54,8 @@ class Enemy:
     ############################################################################
     ## Constants                                                              ##
     ############################################################################
-    _SPEED      = 120;
-    _NEXT_SPEED = 120;
+    _SPEED      = 150;
+    _NEXT_SPEED = 150;
 
     _SURFACES = None;
 
@@ -63,9 +63,9 @@ class Enemy:
     _SURFACE_TYPE_CAUGHT = 1;
     _SURFACE_TYPE_BOMB   = 2;
 
-    _OUT_OF_BOUNDS_INTERVAL_MIN = 0.4; #COWTODO: TWEAK
-    _OUT_OF_BOUNDS_INTERVAL_MAX = 2.5; #COWTODO: TWEAK
-    _CAUGHT_INTERVAL            =   1; #COWTODO: TWEAK
+    _OUT_OF_BOUNDS_INTERVAL_MIN = 0.4;
+    _OUT_OF_BOUNDS_INTERVAL_MAX = 1.0;
+    _CAUGHT_INTERVAL            =   1;
 
 
     ############################################################################
