@@ -45,19 +45,26 @@
 ################################################################################
 ## Python ##
 import sys;
+## 3rd party Libs ##
+import errorbox;
 ## Game_RamIt ##
 import assets;
 import director;
-
 
 ################################################################################
 ## Script initialization                                                      ##
 ################################################################################
 if __name__ == '__main__':
-    if(len(sys.argv) > 1):
-        assets.set_search_path(sys.argv[1]);
+    try:
+        if(len(sys.argv) > 1):
+            assets.set_search_path(sys.argv[1]);
 
-    director.init();
-    director.run ();
-    director.quit();
+        director.init();
+        director.run ();
+        director.quit();
+    except Exception, e:
+        errorbox.errorbox(
+            "Amazing Cow - Taz - Sorry :(",
+            "Failed to init game\n Reason: %s" %(str(e))
+        );
 
