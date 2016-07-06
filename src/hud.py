@@ -76,11 +76,12 @@ class Hud:
                     is_playable  = False
                   );
 
-            #COWTODO: Center the taz into the score text y.
             taz_size = taz.get_size();
             taz.set_position(
+                ## One Taz next to each other
                 max_bounds[0] - ((10 + taz_size[0]) * i),
-                score_pos [1]
+                score_pos[1] + score_size[1] - taz_size[1]
+
             );
             self._lives.append(taz);
 
