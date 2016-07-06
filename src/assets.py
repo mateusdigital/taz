@@ -44,6 +44,7 @@
 ################################################################################
 ## Python ##
 import os.path;
+import sys;
 ## Pygame ##
 import pygame;
 
@@ -73,8 +74,8 @@ def pre_init():
             _assets_search_path = fullpath;
             return;
 
-    print "Error - Cannot find the assets folder, aborting...";
-    exit(1);
+    raise Exception("Error - Cannot find the assets folder");
+
 
 
 ################################################################################
