@@ -1,0 +1,7 @@
+################################################################################
+## Version 1.x.x                                                              ##
+################################################################################
+Version 1.0.0
+    - Finish the basic implementation of game ;D
+      We really hope that you enjoy this little game.
+      
