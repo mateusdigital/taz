@@ -82,7 +82,6 @@ class CreditsScene:
             "",
             "We have other projects at:",
             "www.amazingcow.com",
-            "Take a look :)",
             "",
             "This game is entirely FREE SOFTWARE",
             "This means that you're welcome to",
@@ -93,11 +92,12 @@ class CreditsScene:
             "",
             "Dev / Graphics / Sound by N2OMatt",
             "",
-            "THANKS FOR PLAYING..."
-            "", "",
-            "APAE do a wonderful job helping exceptional people",
-            "Why you don't look and help their work? <3",
-            "www.apaebrasil.org.br"
+            "THANKS FOR PLAYING...",
+            "",
+            "The CCV helps people not commit suicide.",
+            "Their work is very, very important.",
+            "Why don't you help them?",
+            "www.cvv.org.br"
         ];
 
         self.texts   = [];
