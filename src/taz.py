@@ -67,9 +67,9 @@ class Taz():
     _FRAMES                = None;
     _FRAMES_COUNT          = 2;
     _ANIMATION_INVERVAL    = 0.15;
-    _CHANGE_TRACK_INTERVAL = 0.10; #COWTODO: TWEAK
-    _DEATH_INTERVAL        = 1.00; #COWTODO: TWEAK
-    _SPEED                 = 300;  #COWTODO: TWEAK
+    _CHANGE_TRACK_INTERVAL = 0.10;
+    _DEATH_INTERVAL        = 1.00;
+    _SPEED                 = 400;
 
 
     ############################################################################
@@ -273,7 +273,8 @@ class Taz():
 
     ## Movement
     def _change_track_is_ok(self):
-        #COWTODO: Comment
+        ## We only let Taz move the track if the timer
+        ## has expired.
         is_ok = not self._track_change_timer.is_enabled();
         if(is_ok):
             self._track_change_timer.start();
