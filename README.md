@@ -24,7 +24,7 @@ The Amazing Cow's Games site.
 You can find more info about the original game in 
 [AtariAge](https://atariage.com/software_page.html?SogriftwareLabelID=554)
 
-It was developed in python using mainly ```pygame```.
+It was developed in python using mainly ```pygame``` and ```numpy```.
 
 
 <br>
@@ -53,6 +53,7 @@ Thanks!
 <a href="http://amazingcow.com/opensource/game/game_taz/img/2.png"> <img src="http://amazingcow.com/opensource/game/game_taz/img/2.png" width="20%" height="20%"> </a>
 <a href="http://amazingcow.com/opensource/game/game_taz/img/3.png"> <img src="http://amazingcow.com/opensource/game/game_taz/img/3.png" width="20%" height="20%"> </a>
 <a href="http://amazingcow.com/opensource/game/game_taz/img/4.png"> <img src="http://amazingcow.com/opensource/game/game_taz/img/4.png" width="20%" height="20%"> </a>
+
 
 
 <!-- ####################################################################### -->
@@ -93,10 +94,10 @@ You should (and probably will) be good to go!
 
 While the compiled package bundle everything that is needed to play, the game
 the sources distribution does not.   
-The game depends on ```pygame``` to run - So you need to 
+The game depends on ```pygame``` and ```numpy``` to run - So you need to 
 have them installed.
 
-Assuming that you have both ```pygame```, we made a Makefile 
+Assuming that you have both ```pygame``` and ```numpy```, we made a Makefile 
 that installs the game into your system.    
 
 So just type:   
@@ -116,6 +117,7 @@ With the appropriated privileges and start gaming :D
 ```Game_Taz``` depends on:
 
 * [pygame](http://www.pygame.org/)
+* [numpy](http://www.numpy.org/)
 
 For those that wants to make a executable from the python sources ```Game_Taz```
 will depends on:
