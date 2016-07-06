@@ -122,7 +122,3 @@ gen-archive:
 dev-build:
 	python ./src/main.py ./assets
 	rm ./src/*.pyc
-
-
-dev-info:
-	python ./src/enemy_info.py
