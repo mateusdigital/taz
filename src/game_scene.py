@@ -42,6 +42,8 @@
 ################################################################################
 ## Imports                                                                    ##
 ################################################################################
+## Python ##
+import copy;
 ## Pygame ##
 import pygame;
 import pygame.locals;
@@ -67,10 +69,12 @@ class GameScene():
 
     _TRACKS_COUNT =  8;
     _TRACK_OFFSET = 32;
+    _TAZ_X_OFFSET = 28;
 
     _SCORE_MULTIPLIER   = 50;
-    _SPEED_UPDATE_COUNT = 20;
-    _SPEED_ACCELERATION = 20;
+    _SPEED_UPDATE_COUNT =  5;
+    _SPEED_ACCELERATION = 15;
+
 
     ############################################################################
     ## CTOR                                                                   ##
@@ -84,22 +88,28 @@ class GameScene():
         ## Game Field
         self._game_field     = assets.load_image("GameField.png");
         game_field_size      = self._game_field.get_size();
-        self._game_field_pos = (GAME_WIN_CENTER_X - game_field_size[0] * 0.5,
-                                GAME_WIN_CENTER_Y - game_field_size[1] * 0.5);
+        self._game_field_pos = [GAME_WIN_CENTER_X - game_field_size[0] * 0.5,
+                                GAME_WIN_CENTER_Y - game_field_size[1] * 0.5];
 
-        #COWTODO: Remove the magic numbers.
-        #COWTODO: This initialization is tooooooooo verbose...
         game_field_size = self._game_field.get_size();
 
-        taz_field_min = [self._game_field_pos[0] + 28,
-                         self._game_field_pos[1] + GameScene._TRACK_OFFSET];
-        taz_field_max = [self._game_field_pos[0] + game_field_size[0] - 28,
-                         self._game_field_pos[1] + game_field_size[1] - GameScene._TRACK_OFFSET];
+        ## Taz Min
+        taz_field_min     = copy.deepcopy(self._game_field_pos);
+        taz_field_min[0] += GameScene._TAZ_X_OFFSET;
+        taz_field_min[1] += GameScene._TRACK_OFFSET;
+        ## Taz Max
+        taz_field_max     = copy.deepcopy(self._game_field_pos);
+        taz_field_max[0] += (game_field_size[0] - GameScene._TAZ_X_OFFSET);
+        taz_field_max[1] += (game_field_size[1] - GameScene._TRACK_OFFSET);
 
-        enemy_field_min = [self._game_field_pos[0],
-                           self._game_field_pos[1] + GameScene._TRACK_OFFSET];
-        enemy_field_max = [self._game_field_pos[0] + game_field_size[0] - 28,
-                           self._game_field_pos[1] + game_field_size[1]];
+        ## Enemy Min
+        enemy_field_min     = copy.deepcopy(self._game_field_pos);
+        enemy_field_min[1] += GameScene._TRACK_OFFSET;
+        ## Enemy Max
+        enemy_field_max     = copy.deepcopy(self._game_field_pos);
+        enemy_field_max[0] += (game_field_size[0] - GameScene._TAZ_X_OFFSET);
+        enemy_field_max[1] += game_field_size[1];
+
 
         ## Taz
         self._taz = Taz(
