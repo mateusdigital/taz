@@ -1,0 +1,8 @@
+[Desktop Entry]
+Categories=Game;Action;
+Encoding=UTF-8
+Name=Taz
+Comment=Taz is remake made with <3 by Amazing Cow Labs
+Exec=taz
+Icon=/usr/local/share/amazingcow_game_taz/assets/icon.png
+Type=Application
