@@ -38,87 +38,127 @@
 ##                                  Enjoy :)                                  ##
 ##----------------------------------------------------------------------------##
 
+##COWTODO: We hard code the paths in assets.py      \
+##         While this matches the paths in Makefile \
+##         it's fragile and we must change to       \
+##         a more robust approach soon as possible.
+
 ################################################################################
-## Vars                                                                       ##
+## Public Vars                                                                ##
 ################################################################################
-HOST="linux_x64"
+HOST=`uname -s`_`uname -m`
 
 
 ################################################################################
 ## Private Vars                                                               ##
 ################################################################################
+_GAME_SAFE_NAME=taz
 _GAME_NAME=taz
+_DESKTOP_FILENAME=$(_GAME_SAFE_NAME).desktop
 
-_COW_BIN=/usr/local/bin
-_COW_SHARE=/usr/local/share/amazingcow_game_taz
+_INSTALL_DIR_BIN=/usr/local/bin
+_INSTALL_DIR_SHARE=/usr/local/share/amazingcow_game_$(_GAME_SAFE_NAME)
+_INSTALL_DIR_DESKTOP=/usr/share/applications
+
+_PROJECT_DIR=./project
+_PROJECT_DIR_BIN=$(_PROJECT_DIR)/bin
+_PROJECT_DIR_OBJ=$(_PROJECT_DIR)/obj
+
+
 _GIT_TAG=`git describe --tags --abbrev=0 | tr . _`
+_CC=g++ -Ofast
+_XBUILD=xbuild /p:Configuration=Release
 
+SILENT=@
+
+all: dev-build
 
 ################################################################################
 ## End user                                                                   ##
 ################################################################################
 install:
-	@ echo "---> Installing...".
+	$(SILENT) echo "---> Installing..."
 
-	@ ## Deleting old stuff...
-	@ rm -rf $(_COW_SHARE)
-	@ rm -rf $(_COW_BIN)/$(_GAME_NAME)
+	$(SILENT) ## Deleting old stuff...
+	$(SILENT) rm -rf $(_INSTALL_DIR_SHARE)
+	$(SILENT) rm -rf $(_INSTALL_DIR_BIN)/$(_GAME_NAME)
+	$(SILENT) rm -rf $(_INSTALL_DIR_DESKTOP/$(_DESKTOP_FILENAME)
 
-	@ ## Install new stuff...
-	@ ## Source
-	@ cp -rf ./src/ $(_COW_SHARE)
-	@ ln -s $(_COW_SHARE)/main.py  $(_COW_BIN)/$(_GAME_NAME)
-	@ chmod 755 $(_COW_BIN)/$(_GAME_NAME)
+	$(SILENT) ## Create the dir if it doesn't exists...
+	$(SILENT) mkdir -p $(_INSTALL_DIR_SHARE)
 
-	@ ## Assets
-	@ cp -rf ./assets/ $(_COW_SHARE)/assets
+	$(SILENT) ## Copy the files to the share
+	$(SILENT) cp -rf ./build/* $(_INSTALL_DIR_SHARE)
 
-	@ echo "---> Done... We **really** hope that you have fun :D"
+	$(SILENT) ## Link the bootstrap (Notice that is symbolic link)
+	$(SILENT) ## and make it executable.
+	$(SILENT) ln -fs $(_INSTALL_DIR_SHARE)/main.py $(_INSTALL_DIR_BIN)/$(_GAME_NAME)
+	$(SILENT) chmod 755 $(_INSTALL_DIR_BIN)/$(_GAME_NAME)
 
+	$(SILENT) ## Copy the desktop entry.
+	$(SILENT) cp -f $(_DESKTOP_FILENAME) $(_INSTALL_DIR_DESKTOP)
+
+
+	$(SILENT) echo "---> Done... We **really** hope that you have fun :D"
 
 
 ################################################################################
 ## Release                                                                    ##
 ################################################################################
 gen-binary:
-	## Remove old stuff...
 	rm -rf build     \
 	       dist      \
 	       bin       \
-	       $(_GAME_NAME).spec
+	       $(_GAME_SAFE_NAME).spec
 
-	## Pyinstaller
-	pyinstaller -F --windowed        \
-	            --name=$(_GAME_NAME) \
+	pyinstaller -F --windowed   \
+	            --name=$(_GAME_SAFE_NAME) \
 	            ./src/main.py
 
-	## Create a brand new directory and copy the pyinstaller
-	## generated binary, assets and infos to it.
-	mkdir -p ./bin/game_$(_GAME_NAME)
-	cp -r ./assets/             ./bin/game_$(_GAME_NAME)/assets
-	cp    ./dist/$(_GAME_NAME)  ./bin/game_$(_GAME_NAME)/$(_GAME_NAME)
+	mkdir -p ./bin/game_$(_GAME_SAFE_NAME)
+	cp -r ./assets/      			 ./bin/game_$(_GAME_SAFE_NAME)/assets
+	cp    ./dist/$(_GAME_SAFE_NAME)  ./bin/game_$(_GAME_SAFE_NAME)/$(_GAME_SAFE_NAME)
 	cp AUTHORS.txt   \
 	   CHANGELOG.txt \
 	   COPYING.txt   \
 	   README.md     \
 	   TODO.txt      \
-	   ./bin/game_$(_GAME_NAME)
 
-	## Genereate the zip...
-	cd ./bin && zip -r ./$(HOST)_$(_GIT_TAG).zip ./game_$(_GAME_NAME)
-	rm -rf ./bin/game_$(_GAME_NAME)
+	   ./bin/game_$(_GAME_SAFE_NAME)
+
+	cd ./bin && zip -r ./$(HOST)_$(_GIT_TAG).zip ./game_$(_GAME_SAFE_NAME)
+	rm -rf ./bin/game_$(_GAME_SAFE_NAME)
 
 
 gen-archive:
 	mkdir -p ./archives
 
-	git archive --output ./archives/source_game_$(_GAME_NAME)_$(_GIT_TAG).zip    master
-	git archive --output ./archives/source_game_$(_GAME_NAME)_$(_GIT_TAG).tar.gz master
+	git archive --output ./archives/source_game_$(_GAME_SAFE_NAME)_$(_GIT_TAG).zip    master
+	git archive --output ./archives/source_game_$(_GAME_SAFE_NAME)_$(_GIT_TAG).tar.gz master
 
 
 ################################################################################
 ## Dev                                                                        ##
 ################################################################################
 dev-build:
-	python ./src/main.py ./assets
-	rm ./src/*.pyc
+	rm -rf ./build
+	mkdir -p ./build
+
+	cp -rf ./src/*.py ./build
+	cp -rf ./assets   ./build
+
+
+################################################################################
+## Clean                                                                      ##
+################################################################################
+clean:
+	## Archives
+	rm -rf archives
+
+	## Bin
+	rm -rf bin
+	rm -rf dist
+	rm -f $(_GAME_SAFE_NAME).spec
+
+	## Build
+	rm -rf build
