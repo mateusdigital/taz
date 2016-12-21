@@ -1,7 +1,18 @@
 ################################################################################
 ## Version 1.x.x                                                              ##
 ################################################################################
+Version 1.1.0 - Dec 21, 2016
+-- General --
+    - Add a desktop entry.
+    - Change the "ownership" of project to Amazing Cow Labs.
+    - Copy the Makefile from Game_RamIt and make
+      the modifications needed to suit the Game_Taz.
+    - Graphical errors messages
+    - Remove the exit and add the exception.
+    - Add the numpy dependency info.
+
+--------------------------------------------------------------------------------
 Version 1.0.0
     - Finish the basic implementation of game ;D
       We really hope that you enjoy this little game.
-      
+
