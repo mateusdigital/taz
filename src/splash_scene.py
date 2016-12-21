@@ -72,7 +72,7 @@ class SplashScene:
         ## Text
         self._text = Text(FONT_NAME, FONT_SIZE + 15,
                          -1, -1,  ## Dummy values.
-                         "amazingcow", COLOR_BLACK);
+                         "amazing cow labs", COLOR_BLACK);
         text_size = self._text.get_size();
         self._text.set_position(
             GAME_WIN_WIDTH  * 0.5 - text_size[0] * 0.5,

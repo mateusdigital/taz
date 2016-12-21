@@ -77,7 +77,7 @@ class CreditsScene:
 
         ## Message
         msg = [
-            "This remake was made with <3 by Amazing Cow.",
+            "This remake was made with <3 by Amazing Cow Labs.",
             "We hope that you enjoy this little game (!)"
             "",
             "We have other projects at:",

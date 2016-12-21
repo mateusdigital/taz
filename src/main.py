@@ -62,9 +62,10 @@ if __name__ == '__main__':
         director.init();
         director.run ();
         director.quit();
+
     except Exception, e:
         errorbox.errorbox(
-            "Amazing Cow - Taz - Sorry :(",
+            "Taz - Amazing Cow Labs - Sorry :(",
             "Failed to init game\n Reason: %s" %(str(e))
         );
 
