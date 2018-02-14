@@ -66,6 +66,7 @@ def init():
     ## Change the scene.
     go_to_splash();
 
+
     _Globals.running = True;
 
 

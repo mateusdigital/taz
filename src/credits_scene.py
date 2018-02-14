@@ -110,4 +110,3 @@ class CreditsScene:
         surface.blit(self.logo, self.logo_pos);
         for text in self.texts:
             text.draw(surface, antialias = True);
-
