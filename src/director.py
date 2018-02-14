@@ -51,7 +51,8 @@ def init():
     assets.pre_init();
 
     pygame.init();
-     ## Setup the icon and caption.
+
+    ## Setup the icon and caption.
     rawicon = assets.load_image_no_convert("icon.png");
     pygame.display.set_icon(rawicon);
     pygame.display.set_caption(STR_WIN_CAPTION, STR_WIN_CAPTION_SHORT);
