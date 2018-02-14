@@ -193,15 +193,15 @@ class Taz():
 
         ## Movement
         ## Vertical - Track Based
-        if(input.is_down(pygame.locals.K_DOWN) and self._change_track_is_ok()):
+        if(input.is_down(input.KEY_MOVEMENT_DOWN) and self._change_track_is_ok()):
             self._curr_track_index += 1;
-        elif(input.is_down(pygame.locals.K_UP) and self._change_track_is_ok()):
+        elif(input.is_down(input.KEY_MOVEMENT_UP) and self._change_track_is_ok()):
             self._curr_track_index -= 1;
 
         ## Horizontal - Pixel/sec Based
-        if(input.is_down(pygame.locals.K_LEFT)):
+        if(input.is_down(input.KEY_MOVEMENT_LEFT)):
             self._position[0] -= Taz._SPEED * dt;
-        elif(input.is_down(pygame.locals.K_RIGHT)):
+        elif(input.is_down(input.KEY_MOVEMENT_RIGHT)):
             self._position[0] += Taz._SPEED * dt;
 
         ## Maintain the Taz into GameField

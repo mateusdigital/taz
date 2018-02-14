@@ -152,7 +152,7 @@ class GameScene():
 
     def _update_playing(self, dt):
         ## Input
-        if(input.is_click(pygame.locals.K_p)):
+        if(input.is_click(input.KEY_PAUSE)):
             self._game_state = GameScene._STATE_PAUSED;
             return;
 
@@ -197,13 +197,13 @@ class GameScene():
 
     def _update_paused(self, dt):
         ## Input
-        if(input.is_click(pygame.locals.K_p)):
+        if(input.is_click(input.KEY_PAUSE)):
             self._game_state = GameScene._STATE_PLAYING;
 
 
     def _update_game_over(self, dt):
         ## Input
-        if(input.is_click(pygame.locals.K_SPACE)):
+        if(input.is_click(input.KEY_SELECTION, input.KEY_PAUSE)):
             director.go_to_menu();
 
 

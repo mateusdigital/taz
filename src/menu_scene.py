@@ -108,16 +108,16 @@ class MenuScene:
         self._play_text.update   (dt);
         self._credits_text.update(dt);
 
-        if(input.is_click(pygame.locals.K_UP)):
-            self._update_selection(-1);
-        elif(input.is_click(pygame.locals.K_DOWN)):
-            self._update_selection(+1);
+        ##----------------------------------------------------------------------
+        ## Movement.
+        if  (input.is_click(input.KEY_MOVEMENT_UP  )): self._update_selection(-1);
+        elif(input.is_click(input.KEY_MOVEMENT_DOWN)): self._update_selection(+1);
 
-        elif(input.is_click(pygame.locals.K_SPACE)):
-            if(self._curr_selection == 0):
-                director.go_to_game();
-            else:
-                director.go_to_credits();
+        ##----------------------------------------------------------------------
+        ## Selection.
+        elif(input.is_click(input.KEY_SELECTION)):
+            if(self._curr_selection == 0): director.go_to_game   ();
+            else:                          director.go_to_credits();
 
 
     def draw(self, surface):

@@ -39,23 +39,62 @@
 ##                                  Enjoy :)                                  ##
 ##----------------------------------------------------------------------------##
 
-################################################################################
+##----------------------------------------------------------------------------##
 ## Imports                                                                    ##
-################################################################################
+##----------------------------------------------------------------------------##
 ## Pygame ##
 import pygame;
 
 
-############################################################################
-## Global vars                                                            ##
-############################################################################
+##----------------------------------------------------------------------------##
+## Constants                                                                  ##
+##----------------------------------------------------------------------------##
+KEY_SELECTION = (
+    pygame.locals.K_RETURN,
+    pygame.locals.K_SPACE
+);
+
+KEY_CANCEL = (
+    pygame.locals.K_ESCAPE
+);
+
+KEY_MOVEMENT_UP = (
+    pygame.locals.K_UP,
+    pygame.locals.K_w,
+);
+
+KEY_MOVEMENT_DOWN = (
+    pygame.locals.K_DOWN,
+    pygame.locals.K_s,
+);
+
+KEY_MOVEMENT_LEFT = (
+    pygame.locals.K_LEFT,
+    pygame.locals.K_a,
+);
+
+KEY_MOVEMENT_RIGHT = (
+    pygame.locals.K_RIGHT,
+    pygame.locals.K_d,
+);
+
+KEY_PAUSE = (
+    pygame.locals.K_p,
+);
+
+
+
+
+##----------------------------------------------------------------------------##
+## Global vars                                                                ##
+##----------------------------------------------------------------------------##
 _prev_keys = None;
 _curr_keys = None;
 
 
-############################################################################
-## Init                                                                   ##
-############################################################################
+##----------------------------------------------------------------------------##
+## Init                                                                       ##
+##----------------------------------------------------------------------------##
 def init():
     global _prev_keys;
     global _curr_keys;
@@ -64,9 +103,9 @@ def init():
     _curr_keys = pygame.key.get_pressed();
 
 
-############################################################################
-## Update                                                                 ##
-############################################################################
+##----------------------------------------------------------------------------##
+## Update                                                                     ##
+##----------------------------------------------------------------------------##
 def update():
     global _prev_keys;
     global _curr_keys;
@@ -74,21 +113,30 @@ def update():
     _prev_keys = _curr_keys;
     _curr_keys = pygame.key.get_pressed();
 
+def get_state_value(keys_states, keys):
+    for k in keys:
+        if(isinstance(k, tuple)):
+            if(get_state_value(keys_states, k)):
+                return True;
+        elif(keys_states[k]):
+            return True;
 
-############################################################################
-## Key Methods                                                            ##
-############################################################################
-def is_down(key):
-    return _curr_keys[key];
+    return False;
 
-def is_up(key):
-    return not is_down(key);
+##----------------------------------------------------------------------------##
+## Key Methods                                                                ##
+##----------------------------------------------------------------------------##
+def is_down(*keys):
+    if(get_state_value(_curr_keys, keys)):
+        return True;
 
-def was_down(key):
-    return _prev_keys[key] and is_up(key);
+    return False;
 
-def was_up(key):
-    return (not _prev_keys[key] and is_down(key));
+def was_up(*keys):
+    if(not is_down(*keys)):                return False;
+    if(get_state_value(_prev_keys, keys)): return False;
 
-def is_click(key):
-    return is_down(key) and was_up(key);
+    return True;
+
+def is_click(*keys):
+    return is_down(*keys) and was_up(*keys);

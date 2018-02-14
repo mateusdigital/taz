@@ -123,7 +123,7 @@ class CreditsScene:
     ## Update / Draw                                                          ##
     ############################################################################
     def update(self, dt):
-        if(input.is_click(pygame.locals.K_SPACE)):
+        if(input.is_click(input.KEY_SELECTION, input.KEY_CANCEL)):
             director.go_to_menu();
 
 
