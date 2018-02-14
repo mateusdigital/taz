@@ -34,8 +34,6 @@ GAME_WIN_HEIGHT        = int(GAME_WIN_WIDTH / 1.3333333);
 GAME_WIN_CENTER_X      = GAME_WIN_WIDTH  * 0.5;
 GAME_WIN_CENTER_Y      = GAME_WIN_HEIGHT * 0.5;
 GAME_WIN_SIZE          = (GAME_WIN_WIDTH, GAME_WIN_HEIGHT);
-GAME_WIN_CAPTION       = "Taz - AmazingCow Labs - v1.1.0";
-GAME_WIN_CAPTION_SHORT = "Taz";
 
 
 ################################################################################
@@ -60,3 +58,9 @@ FONT_SIZE = 20;
 COLOR_BLACK = (0, 0, 0);
 COLOR_WHITE = (255, 255, 255);
 COLOR_BROWN = (155, 82, 15);
+##----------------------------------------------------------------------------##
+## Strings                                                                    ##
+##----------------------------------------------------------------------------##
+STR_WIN_CAPTION       = "Taz - AmazingCow Labs - v1.2.0";
+STR_WIN_CAPTION_SHORT = "Taz";
+STR_COPYRIGHT         = "amazing cow labs - 2015 - 2018"

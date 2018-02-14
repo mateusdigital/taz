@@ -54,11 +54,11 @@ def init():
      ## Setup the icon and caption.
     rawicon = assets.load_image_no_convert("icon.png");
     pygame.display.set_icon(rawicon);
-    pygame.display.set_caption(GAME_WIN_CAPTION, GAME_WIN_CAPTION_SHORT);
+    pygame.display.set_caption(STR_WIN_CAPTION, STR_WIN_CAPTION_SHORT);
 
     ## Init the Window.
     _Globals.surface = pygame.display.set_mode(GAME_WIN_SIZE);
-    pygame.display.set_caption(GAME_WIN_CAPTION);
+    pygame.display.set_caption(STR_WIN_CAPTION);
 
     ## Init Input
     input.init();

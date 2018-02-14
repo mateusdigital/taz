@@ -69,7 +69,7 @@ class MenuScene:
 
         ## AmazingCow
         self._amazingcow_text = Text(FONT_NAME, FONT_MENU_LOGO_SIZE,
-                                     -1, -1, "amazingcow - 2016",
+                                     -1, -1, STR_COPYRIGHT,
                                      COLOR_BROWN);
         amazing_size = self._amazingcow_text.get_size();
         self._amazingcow_text.set_position(wcenter - (amazing_size[0] * 0.5),
