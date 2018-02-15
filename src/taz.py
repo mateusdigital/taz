@@ -23,12 +23,16 @@
 ################################################################################
 ## Pygame ##
 import pygame.locals;
-## NumPy ##
-import numpy;
 ## Project ##
 import assets;
 import input;
 from cowclock import *;
+
+def clip(cur, min, max):
+    if(cur < min): return min;
+    if(cur > max): return max;
+
+    return cur;
 
 class Taz():
     ############################################################################
@@ -182,13 +186,13 @@ class Taz():
             self._position[0] += Taz._SPEED * dt;
 
         ## Maintain the Taz into GameField
-        self._curr_track_index = numpy.clip(self._curr_track_index,
-                                            0,
-                                            self._tracks_count -1);
+        self._curr_track_index = clip(self._curr_track_index,
+                                      0,
+                                      self._tracks_count -1);
 
-        self._position[0] = numpy.clip(self._position  [0],
-                                       self._min_bounds[0],
-                                       self._max_bounds[0]);
+        self._position[0] = clip(self._position  [0],
+                                 self._min_bounds[0],
+                                 self._max_bounds[0]);
 
 
         ## Update the vertical position based upon which track he is.
