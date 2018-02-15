@@ -1,6 +1,11 @@
+##------------------------------------------------------------------------------
+## Files
 *.pyc
 *.spec
-archives/
-bin/
+
+##------------------------------------------------------------------------------
+## Folders
 build/
-dist/
+src/build/
+
+!scripts/build ## Do not ignore the build folder on scripts.
