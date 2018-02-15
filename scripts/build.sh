@@ -41,7 +41,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)";
 PLATFORM="gnu_linux";  ## Default value.
 VERSION="";            ## Default value.
 MAKE_ZIP="false";      ## Default value.
-BUILD_ENABLED="false"; ## false will disable the build phase.
+BUILD_ENABLED="true";  ## false will disable the build phase.
 
 
 ##----------------------------------------------------------------------------##
