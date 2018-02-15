@@ -2,10 +2,13 @@
 ## Files
 *.pyc
 *.spec
+lhcrc
+
 
 ##------------------------------------------------------------------------------
 ## Folders
 build/
 src/build/
+.vscode
 
 !scripts/build ## Do not ignore the build folder on scripts.
