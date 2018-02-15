@@ -1,3 +1,6 @@
+gnu_linux_v1.2.0.zip  ## Output of builds...
+windows_v1.2.0/*    ## Output of builds...
+
 ##------------------------------------------------------------------------------
 ## Files
 *.pyc
@@ -10,5 +13,9 @@ lhcrc
 build/
 src/build/
 .vscode
+
+## Build Output
+gnu_linux_*
+windows_*
 
 !scripts/build ## Do not ignore the build folder on scripts.
