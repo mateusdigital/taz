@@ -53,7 +53,6 @@ class CreditsScene:
             director.randint(0, 255)
         );
 
-
         ## Message
         msg = [
             "This remake was made with <3 by Amazing Cow Labs.",
@@ -67,13 +66,13 @@ class CreditsScene:
             "SHARE and HACK IT (!!!)",
             "",
             "You can find the sources at:",
-            "opensource.amazingcow.com",
+            "floss.amazingcow.com",
             "",
             "Dev / Graphics / Sound by N2OMatt",
             "",
             "THANKS FOR PLAYING...",
             "",
-            "The CCV helps people not commit suicide.",
+            "The CVV helps people not commit suicide.",
             "Their work is very, very important.",
             "Why don't you help them?",
             "www.cvv.org.br"
