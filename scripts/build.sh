@@ -112,8 +112,8 @@ if [ -n "$(pw_getopt_exists "--dist" "$@")" ]; then
     done;
 
     ## Create the bootstrap files
-    echo "#!/usr/bin/env bash"      >> "${PACKAGE_DIR}/run.sh";
-    echo "python3 ./ramit/main.py"  >> "${PACKAGE_DIR}/run.sh";
+    echo "#!/usr/bin/env bash"    >> "${PACKAGE_DIR}/run.sh";
+    echo "python3 ./taz/main.py"  >> "${PACKAGE_DIR}/run.sh";
     chmod 777 "${PACKAGE_DIR}/run.sh";
 
     cd "${DIST_DIR}"
