@@ -82,7 +82,7 @@ class CreditsScene:
         start_offset = self.logo_pos[1] + logo_size[1] + 5;
         line_offset  =  16;
 
-        for i in xrange(0, len(msg)):
+        for i in range(0, len(msg)):
             text = Text("SourceCodePro-Regular.ttf", line_offset,
                         -1, -1,
                         msg[i], COLOR_BLACK);

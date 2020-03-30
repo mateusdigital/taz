@@ -96,7 +96,7 @@ def run():
                 if(frame_time >= GAME_FRAME_MS):
                     break;
         else:
-            print "MISS FRAME";
+            print("MISS FRAME");
 
         ## Game Draw
         _draw();

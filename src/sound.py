@@ -54,23 +54,37 @@ PRE_INIT_SIZE      =   -16;
 PRE_INIT_CHANNELS  =     1;
 PRE_INIT_BUFFER    =  1024;
 
+_sound_enabled = True;
+
 ################################################################################
 ## Init                                                                       ##
 ################################################################################
 def pre_init():
-    pygame.mixer.pre_init(PRE_INIT_FREQUENCY,
-                          PRE_INIT_SIZE,
-                          PRE_INIT_CHANNELS,
-                          PRE_INIT_BUFFER);
+    try:
+        pygame.mixer.pre_init(PRE_INIT_FREQUENCY,
+                            PRE_INIT_SIZE,
+                            PRE_INIT_CHANNELS,
+                            PRE_INIT_BUFFER);
+        pygame.mixer.init();
+    except Exception as e:
+        print(str(e));
+        global _sound_enabled;
+        _sound_enabled = False;
 
 ################################################################################
 ## Sounds                                                                     ##
 ################################################################################
 def play_intro():
+    if(not _sound_enabled):
+        return;
     pygame.mixer.Sound(assets.build_path("amazing_intro.wav")).play();
 
 def play_eat():
+    if(not _sound_enabled):
+        return;
     pygame.mixer.Sound(assets.build_path("eat.wav")).play();
 
 def play_bomb():
+    if(not _sound_enabled):
+        return;
     pygame.mixer.Sound(assets.build_path("bomb.wav")).play();

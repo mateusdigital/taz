@@ -102,7 +102,7 @@ class GameScene():
 
         ## Enemies
         self._enemies = [];
-        for i in xrange(0, GameScene._TRACKS_COUNT):
+        for i in range(0, GameScene._TRACKS_COUNT):
             self._enemies.append(
                 Enemy(
                     min_bounds   = enemy_field_min,

@@ -1,16 +1,18 @@
-# coding=utf8
+#!/usr/bin/python
+#coding=utf8
 ##----------------------------------------------------------------------------##
 ##               █      █                                                     ##
 ##               ████████                                                     ##
 ##             ██        ██                                                   ##
-##            ███  █  █  ███        cowclock.py                               ##
-##            █ █        █ █        Game_Taz                                  ##
-##             ████████████                                                   ##
-##           █              █       Copyright (c) 2015, 2016                  ##
-##          █     █    █     █      AmazingCow - www.AmazingCow.com           ##
+##            ███  █  █  ███                                                  ##
+##            █ █        █ █        clock.py                                  ##
+##             ████████████         Game Taz                                  ##
+##           █              █       Copyright (c) 2015 AmazingCow             ##
+##          █     █    █     █      www.AmazingCow.com                        ##
 ##          █     █    █     █                                                ##
 ##           █              █       N2OMatt - n2omatt@amazingcow.com          ##
 ##             ████████████         www.amazingcow.com/n2omatt                ##
+##                                                                            ##
 ##                                                                            ##
 ##                  This software is licensed as GPLv3                        ##
 ##                 CHECK THE COPYING FILE TO MORE DETAILS                     ##
@@ -27,9 +29,9 @@
 ##        (See opensource.AmazingCow.com/acknowledgment.html for details).    ##
 ##        If you will not acknowledge, just send us a email. We'll be         ##
 ##        *VERY* happy to see our work being used by other people. :)         ##
-##        The email is: acknowledgment_opensource@AmazingCow.com              ##
+##        The email is: acknowledgmentopensource@AmazingCow.com               ##
 ##     3. Altered source versions must be plainly marked as such,             ##
-##        and must not be misrepresented as being the original software.      ##
+##        and must notbe misrepresented as being the original software.       ##
 ##     4. This notice may not be removed or altered from any source           ##
 ##        distribution.                                                       ##
 ##     5. Most important, you must have fun. ;)                               ##
@@ -47,7 +49,7 @@ import sys;
 
 
 class CowClock(object):
-    REPEAT_FOREVER = sys.maxint; ##COWHACK: Should be ok, but verify...
+    REPEAT_FOREVER = -1;
 
 
     ############################################################################
@@ -55,7 +57,7 @@ class CowClock(object):
     ############################################################################
     def __init__(self,
                  time,
-                 repeat_count  = 1,
+                 repeat_count  = 0,
                  tick_callback = None,
                  done_callback = None):
 
@@ -135,10 +137,8 @@ class CowClock(object):
             self._tick_count += 1;
 
             #Did finish?
-            if(self._tick_count >= self._repeat_count):
+            if(self._tick_count >= self._repeat_count and self._repeat_count != CowClock.REPEAT_FOREVER):
                 self._enabled = False;
 
                 if(self._done_callback is not None):
                     self._done_callback();
-
-

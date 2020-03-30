@@ -62,7 +62,7 @@ class Taz():
             return;
 
         Taz._FRAMES = [];
-        for i in xrange(0, Taz._FRAMES_COUNT):
+        for i in range(0, Taz._FRAMES_COUNT):
             Taz._FRAMES.append(assets.load_image("TazFrame%d.png" %(i)));
 
     @staticmethod

@@ -24,8 +24,6 @@
 ################################################################################
 ## Python ##
 import sys;
-## 3rd party Libs ##
-import errorbox;
 ## Game_RamIt ##
 import assets;
 import director;
@@ -42,9 +40,9 @@ if __name__ == '__main__':
         director.run ();
         director.quit();
 
-    except Exception, e:
-        errorbox.errorbox(
+    except Exception as e:
+        raise e;
+        print(
             "Taz - Amazing Cow Labs - Sorry :(",
             "Failed to init game\n Reason: %s" %(str(e))
         );
-

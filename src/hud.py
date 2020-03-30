@@ -67,7 +67,7 @@ class Hud:
         ## Lives
         self._current_lives = Taz.MAX_LIVES;
         self._lives = [];
-        for i in xrange(0, Taz.MAX_LIVES):
+        for i in range(0, Taz.MAX_LIVES):
             taz = Taz(
                     min_bounds   = [0,0], #Dummy values...
                     max_bounds   = [0,0], #Dummy values...
@@ -113,6 +113,3 @@ class Hud:
 
         for taz in self._lives:
             taz.draw(surface);
-
-
-
