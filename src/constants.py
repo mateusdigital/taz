@@ -69,4 +69,4 @@ COLOR_BROWN = (155, 82, 15);
 ##----------------------------------------------------------------------------##
 STR_WIN_CAPTION       = "Taz - AmazingCow Labs - v{0}".format(GAME_VERSION);
 STR_WIN_CAPTION_SHORT = "Taz";
-STR_COPYRIGHT         = "amazing cow labs - 2015 - 2020"
+STR_COPYRIGHT         = "amazing cow labs - 2015, 2020, 2024"
