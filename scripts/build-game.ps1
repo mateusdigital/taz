@@ -34,11 +34,13 @@ New-Item -ItemType Directory -Path "$OUTPUT_FOLDER";
 
 # Build the game.
 pyinstaller.exe .\src\main.py          `
-    -i ".\assets\${EXE_NAME}_icon.ico" `
     -n            "$EXE_NAME"          `
     --distpath    "$OUTPUT_FOLDER"     `
     --noconsole                        `
+    --noupx                            `
+    --onedir
     ;
+    # -i ".\assets\${EXE_NAME}_icon.ico" `
 
 ## Copy Assets to the build folder
 Copy-Item -Recurse ./assets "$OUTPUT_FOLDER/$EXE_NAME";
